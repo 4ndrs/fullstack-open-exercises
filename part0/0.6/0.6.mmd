@@ -1,0 +1,8 @@
+sequenceDiagram
+
+participant b as browser
+participant s as server
+
+b->>s: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa <br /> Request Payload: { content: "I love Linux", date: "2022-11-08T16:27:35.867Z" }
+s-->>b: HTTP status code 201 Created <br > message: "note created"
+note over b: the js-code modifies the DOM adding the newly created note
