@@ -1,0 +1,18 @@
+sequenceDiagram
+
+participant b as browser
+participant s as server
+
+b->>s: HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa
+s-->>b: HTML-code
+b->>s: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+s-->>b: main.css
+b->>s: HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa.js
+s-->>b: spa.js
+
+note over b: browser starts executing js-code <br /> that requests JSON data from server
+
+b->>s: HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+s-->>b: [..., { content: "Hello, World", date: "2022-11-08T13:48:55.388Z" }]
+
+note over b: browser executes the event handler <br /> that renders notes to display
