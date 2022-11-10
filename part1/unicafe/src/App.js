@@ -36,7 +36,7 @@ const App = () => {
       <Button onClick={() => increaseValue("bad")} text="bad" />
 
       <Header text="statistics" />
-      <Feedback {...{ good, neutral, bad }} />
+      <Statistics {...{ good, neutral, bad }} />
     </div>
   );
 };
@@ -49,7 +49,7 @@ const Button = ({ onClick, text }) => {
   return <button {...{ onClick }}>{text}</button>;
 };
 
-const Feedback = ({ good, neutral, bad }) => {
+const Statistics = ({ good, neutral, bad }) => {
   const getTotal = () => good + neutral + bad;
   const getAverage = () => (good - bad) / getTotal() || 0;
   const getGoodPercent = () => (good * 100) / getTotal() || 0;
