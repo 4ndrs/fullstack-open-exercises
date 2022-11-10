@@ -29,14 +29,23 @@ const App = () => {
 
   return (
     <div>
-      {anecdotes[selected]}
-      <br />
-      has {votes[selected]} votes
+      <h1>Anecdote of the day</h1>
+      <Display {...{ anecdotes, votes, selected }} />
       <div>
         <button onClick={setVote}>vote</button>
         <button onClick={selectRandom}>next anecdote</button>
       </div>
     </div>
+  );
+};
+
+const Display = ({ anecdotes, votes, selected }) => {
+  return (
+    <>
+      {anecdotes[selected]}
+      <br />
+      has {votes[selected]} votes
+    </>
   );
 };
 
