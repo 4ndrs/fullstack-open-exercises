@@ -5,35 +5,12 @@ const App = () => {
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
 
-  const increaseValue = (type) => {
-    switch (type) {
-      case "good": {
-        setGood(good + 1);
-        return;
-      }
-
-      case "neutral": {
-        setNeutral(neutral + 1);
-        return;
-      }
-
-      case "bad": {
-        setBad(bad + 1);
-        return;
-      }
-
-      default: {
-        throw Error(`No such type: ${type}`);
-      }
-    }
-  };
-
   return (
     <div>
       <Header text="give feedback" />
-      <Button onClick={() => increaseValue("good")} text="good" />
-      <Button onClick={() => increaseValue("neutral")} text="neutral" />
-      <Button onClick={() => increaseValue("bad")} text="bad" />
+      <Button onClick={() => setGood(good + 1)} text="good" />
+      <Button onClick={() => setNeutral(neutral + 1)} text="neutral" />
+      <Button onClick={() => setBad(bad + 1)} text="bad" />
 
       <Header text="statistics" />
       <Statistics {...{ good, neutral, bad }} />
