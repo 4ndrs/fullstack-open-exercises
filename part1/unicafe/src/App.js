@@ -51,8 +51,12 @@ const Button = ({ onClick, text }) => {
 
 const Statistics = ({ good, neutral, bad }) => {
   const getTotal = () => good + neutral + bad;
-  const getAverage = () => (good - bad) / getTotal() || 0;
-  const getGoodPercent = () => (good * 100) / getTotal() || 0;
+  const getAverage = () => (good - bad) / getTotal();
+  const getGoodPercent = () => (good * 100) / getTotal();
+
+  if (!good && !neutral && !bad) {
+    return <div>No feedback given</div>;
+  }
 
   return (
     <div>
