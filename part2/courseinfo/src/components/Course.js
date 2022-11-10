@@ -29,14 +29,11 @@ const Part = ({ name, exercises }) => {
 };
 
 const Total = ({ course }) => {
-  const sumTotal = course.parts.reduce(
-    (prev, curr) => prev + curr.exercises,
-    0
-  );
+  const total = course.parts.reduce((sum, part) => sum + part.exercises, 0);
 
   return (
     <p>
-      <strong>total of {sumTotal} exercises</strong>
+      <strong>total of {total} exercises</strong>
     </p>
   );
 };
