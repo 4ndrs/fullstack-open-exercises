@@ -66,7 +66,7 @@ const Statistics = ({ good, neutral, bad }) => {
         <StatisticLine text="bad" value={bad} />
         <StatisticLine text="all" value={getTotal()} />
         <StatisticLine text="average" value={getAverage()} />
-        <StatisticLine text="positive" value={getGoodPercent()} />
+        <StatisticLine text="positive" value={getGoodPercent() + " %"} />
       </table>
     </div>
   );
