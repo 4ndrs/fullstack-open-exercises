@@ -62,10 +62,8 @@ const Country = (props) => {
   const country = props.country;
   const name = country.name.common;
 
-  // Re-render if we are already in the view, and the only item left
-  if (props.showDetails !== showDetails) {
-    setShowDetails(props.showDetails);
-  }
+  // Re-render if we are already in the view, and then the subsequent item left
+  useEffect(() => setShowDetails(props.showDetails), [props.showDetails]);
 
   if (!showDetails) {
     return (
