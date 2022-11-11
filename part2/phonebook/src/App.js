@@ -36,44 +36,73 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
 
-      <div>
-        filter shown with
-        <input
-          value={filter}
-          onChange={(event) => setFilter(event.target.value)}
-        />
-      </div>
+      <Filter {...{ filter, setFilter }} />
 
-      <h2>add a new</h2>
-      <form>
-        <div>
-          name:
-          <input
-            value={newName}
-            onChange={(event) => setNewName(event.target.value)}
-          />
-        </div>
-        <div>
-          number:
-          <input
-            value={newNumber}
-            onChange={(event) => setNewNumber(event.target.value)}
-          />
-        </div>
-        <div>
-          <button type="submit" onClick={handleAdd}>
-            add
-          </button>
-        </div>
-      </form>
+      <h3>Add a new</h3>
+      <PersonForm
+        {...{ newName, newNumber, setNewName, setNewNumber, handleAdd }}
+      />
 
-      <h2>Numbers</h2>
-      {personsToShow.map((person) => (
-        <div key={person.name}>
-          {person.name} {person.number}
-        </div>
-      ))}
+      <h3>Numbers</h3>
+      <Persons persons={personsToShow} />
     </div>
   );
 };
+
+const Filter = ({ filter, setFilter }) => {
+  return (
+    <div>
+      filter shown with
+      <input
+        value={filter}
+        onChange={(event) => setFilter(event.target.value)}
+      />
+    </div>
+  );
+};
+
+const PersonForm = (props) => {
+  return (
+    <form>
+      <div>
+        name:
+        <input
+          value={props.newName}
+          onChange={(event) => props.setNewName(event.target.value)}
+        />
+      </div>
+      <div>
+        number:
+        <input
+          value={props.newNumber}
+          onChange={(event) => props.setNewNumber(event.target.value)}
+        />
+      </div>
+      <div>
+        <button type="submit" onClick={props.handleAdd}>
+          add
+        </button>
+      </div>
+    </form>
+  );
+};
+
+const Persons = ({ persons }) => {
+  return (
+    <>
+      {persons.map((person) => (
+        <Person key={person.name} person={person} />
+      ))}
+    </>
+  );
+};
+
+const Person = ({ person }) => {
+  return (
+    <div>
+      {person.name} {person.number}
+    </div>
+  );
+};
+
 export default App;
