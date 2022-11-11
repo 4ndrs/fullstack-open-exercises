@@ -57,11 +57,17 @@ const Countries = ({ countries }) => {
   );
 };
 
-const Country = ({ country, showDetails }) => {
+const Country = (props) => {
+  const [showDetails, setShowDetails] = useState(props.showDetails);
+  const country = props.country;
   const name = country.name.common;
 
   if (!showDetails) {
-    return <div>{name}</div>;
+    return (
+      <div>
+        {name} <button onClick={() => setShowDetails(true)}>Show</button>
+      </div>
+    );
   }
 
   const languages = [];
