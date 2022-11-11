@@ -94,7 +94,20 @@ const Country = (props) => {
       <ul>{languages}</ul>
 
       <img alt={`Flag of ${name}`} src={flagSrc} />
+
+      <Weather capital={capital} />
     </div>
+  );
+};
+
+const Weather = ({ capital }) => {
+  return (
+    <>
+      <h1>Weather in {capital}</h1>
+      <div>temperature xxx Celcius</div>
+      <img alt="showing the weather xxx" src="none.png" />
+      <div>wind xxx m/s</div>
+    </>
   );
 };
 
