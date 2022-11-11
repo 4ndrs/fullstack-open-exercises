@@ -62,6 +62,11 @@ const Country = (props) => {
   const country = props.country;
   const name = country.name.common;
 
+  // Re-render if we are already in the view, and the only item left
+  if (props.showDetails !== showDetails) {
+    setShowDetails(props.showDetails);
+  }
+
   if (!showDetails) {
     return (
       <div>
