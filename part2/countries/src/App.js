@@ -99,12 +99,36 @@ const Country = (props) => {
 };
 
 const Weather = ({ capital }) => {
+  const [weatherData, setWeatherData] = useState("");
+
+  useEffect(() => {
+    const apiKey = process.env.REACT_APP_API_KEY;
+    axios
+      .get(
+        "http://api.openweathermap.org/data/2.5/weather?" +
+          `q=${capital}&APPID=${apiKey}&units=metric`
+      )
+      .then((response) => {
+        setWeatherData(response.data);
+      });
+  }, [capital]);
+
+  if (!weatherData) {
+    return;
+  }
+
+  const temperature = weatherData.main.temp;
+  const wind = weatherData.wind.speed;
+  const icon = weatherData.weather[0]?.icon;
+  const description = weatherData.weather[0]?.description;
+  const imgSrc = `http://openweathermap.org/img/wn/${icon}@2x.png`;
+
   return (
     <>
       <h1>Weather in {capital}</h1>
-      <div>temperature xxx Celcius</div>
-      <img alt="showing the weather xxx" src="none.png" />
-      <div>wind xxx m/s</div>
+      <div>temperature {temperature} Celcius</div>
+      <img alt={description} src={imgSrc} />
+      <div>wind {wind} m/s</div>
     </>
   );
 };
