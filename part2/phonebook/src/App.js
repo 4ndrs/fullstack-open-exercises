@@ -12,10 +12,15 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
   const [notificationText, setNotificationText] = useState("");
+  const [notificationError, setNotificationError] = useState("");
 
   useEffect(() => {
-    setTimeout(() => setNotificationText(""), 2000);
+    setTimeout(() => setNotificationText(""), 4000);
   }, [notificationText]);
+
+  useEffect(() => {
+    setTimeout(() => setNotificationError(""), 4000);
+  }, [notificationError]);
 
   useEffect(() => {
     phonebook.fetch().then((data) => setPersons(data));
@@ -39,6 +44,13 @@ const App = () => {
             setNotificationText(`Updated ${returnedPerson.name}`);
             setNewName("");
             setNewNumber("");
+          })
+          .catch((error) => {
+            setNotificationError(
+              `Information of ${person.name} has already been removed from ` +
+                "server"
+            );
+            setPersons(persons.filter((p) => p.id !== person.id));
           });
       }
 
@@ -76,6 +88,7 @@ const App = () => {
       <h2>Phonebook</h2>
 
       <Notification message={notificationText} />
+      <Notification message={notificationError} error={true} />
 
       <Filter {...{ filter, setFilter }} />
 

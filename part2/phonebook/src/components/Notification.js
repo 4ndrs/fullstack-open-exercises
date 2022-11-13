@@ -1,11 +1,11 @@
 import "../Notification.css";
 
-const Notification = ({ message }) => {
+const Notification = ({ message, error }) => {
   if (!message) {
     return;
   }
 
-  return <div className="green">{message}</div>;
+  return <div className={`notification ${error && "error"}`}>{message}</div>;
 };
 
 export default Notification;
