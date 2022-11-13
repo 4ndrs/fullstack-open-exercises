@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 import phonebook from "./services/phonebook";
 import Filter from "./components/Filter";
+import PersonForm from "./components/PersonForm";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -75,32 +76,6 @@ const App = () => {
       <h3>Numbers</h3>
       <Persons persons={personsToShow} handleDelete={handleDelete} />
     </div>
-  );
-};
-
-const PersonForm = (props) => {
-  return (
-    <form>
-      <div>
-        name:
-        <input
-          value={props.newName}
-          onChange={(event) => props.setNewName(event.target.value)}
-        />
-      </div>
-      <div>
-        number:
-        <input
-          value={props.newNumber}
-          onChange={(event) => props.setNewNumber(event.target.value)}
-        />
-      </div>
-      <div>
-        <button type="submit" onClick={props.handleAdd}>
-          add
-        </button>
-      </div>
-    </form>
   );
 };
 
