@@ -28,6 +28,16 @@ const App = () => {
     });
   };
 
+  const handleDelete = (id) => {
+    const person = persons.find((p) => p.id === id);
+
+    if (window.confirm(`Delete ${person.name}?`)) {
+      phonebook
+        .remove(id)
+        .then(() => setPersons(persons.filter((p) => p.id !== id)));
+    }
+  };
+
   const personsToShow = filter
     ? persons.filter((person) =>
         person.name.toLowerCase().includes(filter.toLowerCase())
@@ -46,7 +56,7 @@ const App = () => {
       />
 
       <h3>Numbers</h3>
-      <Persons persons={personsToShow} />
+      <Persons persons={personsToShow} handleDelete={handleDelete} />
     </div>
   );
 };
@@ -89,11 +99,14 @@ const PersonForm = (props) => {
   );
 };
 
-const Persons = ({ persons }) => {
+const Persons = ({ persons, handleDelete }) => {
   return (
     <>
       {persons.map((person) => (
-        <Person key={person.name} person={person} />
+        <div key={person.id}>
+          <Person key={person.name} person={person} />
+          <button onClick={() => handleDelete(person.id)}>delete</button>
+        </div>
       ))}
     </>
   );
@@ -101,9 +114,9 @@ const Persons = ({ persons }) => {
 
 const Person = ({ person }) => {
   return (
-    <div>
+    <>
       {person.name} {person.number}
-    </div>
+    </>
   );
 };
 
