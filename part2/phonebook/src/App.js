@@ -4,12 +4,18 @@ import phonebook from "./services/phonebook";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
+  const [notificationText, setNotificationText] = useState("");
+
+  useEffect(() => {
+    setTimeout(() => setNotificationText(""), 2000);
+  }, [notificationText]);
 
   useEffect(() => {
     phonebook.fetch().then((data) => setPersons(data));
@@ -26,13 +32,14 @@ const App = () => {
       if (window.confirm(message)) {
         phonebook
           .update(person.id, { ...person, number: newNumber })
-          .then((returnedPerson) =>
+          .then((returnedPerson) => {
             setPersons(
               persons.map((p) => (person.id !== p.id ? p : returnedPerson))
-            )
-          );
-        setNewName("");
-        setNewNumber("");
+            );
+            setNotificationText(`Updated ${returnedPerson.name}`);
+            setNewName("");
+            setNewNumber("");
+          });
       }
 
       return;
@@ -42,6 +49,7 @@ const App = () => {
 
     phonebook.add(newPersonObject).then((newPerson) => {
       setPersons(persons.concat(newPerson));
+      setNotificationText(`Added ${newPerson.name}`);
       setNewName("");
       setNewNumber("");
     });
@@ -66,6 +74,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+
+      <Notification message={notificationText} />
 
       <Filter {...{ filter, setFilter }} />
 

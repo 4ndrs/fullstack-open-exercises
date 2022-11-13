@@ -1,0 +1,8 @@
+.green {
+  color: green;
+  background-color: lightgray;
+  border: 3px solid green;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 15px;
+}
