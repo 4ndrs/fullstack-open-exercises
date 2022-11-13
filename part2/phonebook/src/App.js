@@ -23,9 +23,14 @@ const App = () => {
 
     const newPersonObject = { name: newName, number: newNumber };
 
-    setPersons(persons.concat(newPersonObject));
-    setNewName("");
-    setNewNumber("");
+    axios
+      .post("http://localhost:3001/persons", newPersonObject)
+      .then((response) => response.data)
+      .then((newPerson) => {
+        setPersons(persons.concat(newPerson));
+        setNewName("");
+        setNewNumber("");
+      });
   };
 
   const personsToShow = filter
