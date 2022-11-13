@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import phonebook from "./services/phonebook";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -8,9 +8,7 @@ const App = () => {
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/persons")
-      .then((response) => setPersons(response.data));
+    phonebook.fetch().then((data) => setPersons(data));
   }, []);
 
   const handleAdd = (event) => {
@@ -23,14 +21,11 @@ const App = () => {
 
     const newPersonObject = { name: newName, number: newNumber };
 
-    axios
-      .post("http://localhost:3001/persons", newPersonObject)
-      .then((response) => response.data)
-      .then((newPerson) => {
-        setPersons(persons.concat(newPerson));
-        setNewName("");
-        setNewNumber("");
-      });
+    phonebook.add(newPersonObject).then((newPerson) => {
+      setPersons(persons.concat(newPerson));
+      setNewName("");
+      setNewNumber("");
+    });
   };
 
   const personsToShow = filter
