@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
+
 import phonebook from "./services/phonebook";
+import Filter from "./components/Filter";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -72,18 +74,6 @@ const App = () => {
 
       <h3>Numbers</h3>
       <Persons persons={personsToShow} handleDelete={handleDelete} />
-    </div>
-  );
-};
-
-const Filter = ({ filter, setFilter }) => {
-  return (
-    <div>
-      filter shown with
-      <input
-        value={filter}
-        onChange={(event) => setFilter(event.target.value)}
-      />
     </div>
   );
 };
