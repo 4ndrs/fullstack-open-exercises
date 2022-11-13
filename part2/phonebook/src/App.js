@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import phonebook from "./services/phonebook";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
+import Persons from "./components/Persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -76,27 +77,6 @@ const App = () => {
       <h3>Numbers</h3>
       <Persons persons={personsToShow} handleDelete={handleDelete} />
     </div>
-  );
-};
-
-const Persons = ({ persons, handleDelete }) => {
-  return (
-    <>
-      {persons.map((person) => (
-        <div key={person.id}>
-          <Person key={person.name} person={person} />
-          <button onClick={() => handleDelete(person.id)}>delete</button>
-        </div>
-      ))}
-    </>
-  );
-};
-
-const Person = ({ person }) => {
-  return (
-    <>
-      {person.name} {person.number}
-    </>
   );
 };
 
