@@ -2,12 +2,12 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 
-require("dotenv").config({ path: "./.env.local" });
 const Blog = require("./models/blog.js");
+const { PORT, MONGODB_URI } = require("./utils/config.js");
 
 const app = express();
 
-const mongoUrl = process.env.MONGODB_URI;
+const mongoUrl = MONGODB_URI;
 mongoose.connect(mongoUrl);
 
 app.use(cors());
@@ -27,7 +27,6 @@ app.post("/api/blogs", (request, response) => {
   });
 });
 
-const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
