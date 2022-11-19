@@ -7,8 +7,7 @@ const { PORT, MONGODB_URI } = require("./utils/config.js");
 
 const app = express();
 
-const mongoUrl = MONGODB_URI;
-mongoose.connect(mongoUrl);
+mongoose.connect(MONGODB_URI);
 
 app.use(cors());
 app.use(express.json());
