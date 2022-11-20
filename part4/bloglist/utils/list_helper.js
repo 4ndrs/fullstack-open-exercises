@@ -25,8 +25,35 @@ const favoriteBlog = (blogs) => {
   };
 };
 
+const mostBlogs = (blogs) => {
+  const bloggers = blogs.reduce((bloggers, current) => {
+    const currentBlogger = bloggers.find(
+      (blogger) => blogger.author === current.author
+    );
+
+    if (currentBlogger) {
+      return bloggers.map((blogger) => {
+        if (blogger.author != currentBlogger.author) {
+          return blogger;
+        }
+        return { ...currentBlogger, blogs: currentBlogger.blogs + 1 };
+      });
+    }
+
+    return [...bloggers, { author: current.author, blogs: 1 }];
+  }, []);
+
+  return bloggers.reduce((mostBlogs, current) => {
+    if (current.blogs < mostBlogs.blogs) {
+      return mostBlogs;
+    }
+    return current;
+  });
+};
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
+  mostBlogs,
 };
