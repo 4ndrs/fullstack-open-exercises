@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --watch index.js",
+    "lint": "eslint .",
     "test": "jest --verbose"
   },
   "author": "4ndrs <andres.degozaru@gmail.com>",
