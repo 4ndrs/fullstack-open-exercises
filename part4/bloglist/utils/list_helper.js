@@ -25,12 +25,8 @@ const favoriteBlog = (blogs) => {
   };
 };
 
-const mostBlogs = (blogs) => {
-  if (blogs.length < 1) {
-    return;
-  }
-
-  const bloggers = blogs.reduce((bloggers, current) => {
+const getBloggers = (blogs) => {
+  return blogs.reduce((bloggers, current) => {
     const currentBlogger = bloggers.find(
       (blogger) => blogger.author === current.author
     );
@@ -40,19 +36,35 @@ const mostBlogs = (blogs) => {
         if (blogger.author != currentBlogger.author) {
           return blogger;
         }
-        return { ...currentBlogger, blogs: currentBlogger.blogs + 1 };
+        return {
+          author: currentBlogger.author,
+          likes: currentBlogger.likes + current.likes,
+          blogs: currentBlogger.blogs + 1,
+        };
       });
     }
 
-    return [...bloggers, { author: current.author, blogs: 1 }];
+    return [
+      ...bloggers,
+      { author: current.author, likes: current.likes, blogs: 1 },
+    ];
   }, []);
+};
+
+const mostBlogs = (blogs) => {
+  if (blogs.length < 1) {
+    return;
+  }
+
+  const bloggers = getBloggers(blogs);
+  const firstBlogger = { author: bloggers[0].author, blogs: bloggers[0].blogs };
 
   return bloggers.reduce((mostBlogs, current) => {
     if (current.blogs < mostBlogs.blogs) {
       return mostBlogs;
     }
-    return current;
-  });
+    return { author: current.author, blogs: current.blogs };
+  }, firstBlogger);
 };
 
 const mostLikes = (blogs) => {
@@ -60,33 +72,15 @@ const mostLikes = (blogs) => {
     return;
   }
 
-  const bloggers = blogs.reduce((bloggers, current) => {
-    const currentBlogger = bloggers.find(
-      (blogger) => blogger.author === current.author
-    );
-
-    if (currentBlogger) {
-      console.log(currentBlogger, current.title);
-      return bloggers.map((blogger) => {
-        if (blogger.author != currentBlogger.author) {
-          return blogger;
-        }
-        return {
-          ...currentBlogger,
-          likes: currentBlogger.likes + current.likes,
-        };
-      });
-    }
-
-    return [...bloggers, { author: current.author, likes: current.likes }];
-  }, []);
+  const bloggers = getBloggers(blogs);
+  const firstBlogger = { author: bloggers[0].author, likes: bloggers[0].likes };
 
   return bloggers.reduce((mostBlogs, current) => {
     if (current.likes < mostBlogs.likes) {
       return mostBlogs;
     }
-    return current;
-  });
+    return { author: current.author, likes: current.likes };
+  }, firstBlogger);
 };
 
 module.exports = {
