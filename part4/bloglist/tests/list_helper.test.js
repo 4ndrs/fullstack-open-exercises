@@ -66,6 +66,12 @@ describe("total likes", () => {
 });
 
 describe("favorite blog", () => {
+  test("of empty list, returns nothing", () => {
+    const result = listHelper.favoriteBlog([]);
+
+    expect(result).toEqual(undefined);
+  });
+
   test("when list has one blog, favorite equals that", () => {
     const blogs = [
       {
