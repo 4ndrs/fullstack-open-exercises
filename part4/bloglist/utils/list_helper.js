@@ -55,9 +55,44 @@ const mostBlogs = (blogs) => {
   });
 };
 
+const mostLikes = (blogs) => {
+  if (blogs.length < 1) {
+    return;
+  }
+
+  const bloggers = blogs.reduce((bloggers, current) => {
+    const currentBlogger = bloggers.find(
+      (blogger) => blogger.author === current.author
+    );
+
+    if (currentBlogger) {
+      console.log(currentBlogger, current.title);
+      return bloggers.map((blogger) => {
+        if (blogger.author != currentBlogger.author) {
+          return blogger;
+        }
+        return {
+          ...currentBlogger,
+          likes: currentBlogger.likes + current.likes,
+        };
+      });
+    }
+
+    return [...bloggers, { author: current.author, likes: current.likes }];
+  }, []);
+
+  return bloggers.reduce((mostBlogs, current) => {
+    if (current.likes < mostBlogs.likes) {
+      return mostBlogs;
+    }
+    return current;
+  });
+};
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
   mostBlogs,
+  mostLikes,
 };
