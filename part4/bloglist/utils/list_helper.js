@@ -26,6 +26,10 @@ const favoriteBlog = (blogs) => {
 };
 
 const mostBlogs = (blogs) => {
+  if (blogs.length < 1) {
+    return;
+  }
+
   const bloggers = blogs.reduce((bloggers, current) => {
     const currentBlogger = bloggers.find(
       (blogger) => blogger.author === current.author

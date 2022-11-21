@@ -128,6 +128,12 @@ describe("favorite blog", () => {
 });
 
 describe("most blogs", () => {
+  test("of empty list, returns nothing", () => {
+    const result = listHelper.mostBlogs([]);
+
+    expect(result).toEqual(undefined);
+  });
+
   test("of a single author in a list of four blogs returns the total", () => {
     const blogs = [
       {
