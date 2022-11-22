@@ -25,6 +25,13 @@ test("all blogs are returned in the JSON format", async () => {
   expect(response.body).toHaveLength(helper.initialBlogs.length);
 });
 
+test("id property of a note is defined", async () => {
+  const response = await api.get("/api/blogs");
+  const note = response.body[0];
+
+  expect(note.id).toBeDefined();
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
