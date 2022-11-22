@@ -32,6 +32,27 @@ test("id property of a note is defined", async () => {
   expect(note.id).toBeDefined();
 });
 
+test("create a new blog post", async () => {
+  const newBlog = {
+    title: "Alchemy 101: The Importance of Networking",
+    author: "Sarasa Feed",
+    url: "https://blog.shinmai-renkin.com/",
+    likes: 0,
+  };
+
+  await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(201)
+    .expect("Content-Type", /application\/json/);
+
+  const blogsAtEnd = await helper.blogsInDb();
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
+
+  const contents = blogsAtEnd.map((blog) => blog.title);
+  expect(contents).toContain(newBlog.title);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
