@@ -23,10 +23,10 @@ describe("when some blog posts exist", () => {
   });
 
   test("id property of a specific blog is defined", async () => {
-    const response = await api.get("/api/blogs");
-    const note = response.body[0];
+    const blogs = await helper.blogsInDb();
+    const blog = blogs[0];
 
-    expect(note.id).toBeDefined();
+    expect(blog.id).toBeDefined();
   });
 });
 
