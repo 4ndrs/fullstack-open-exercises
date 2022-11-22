@@ -9,6 +9,13 @@ blogsRouter.get("/", async (request, response) => {
 
 blogsRouter.post("/", async (request, response) => {
   const { title, author, likes, url } = request.body;
+
+  if ([title, url].includes(undefined)) {
+    return response
+      .status(400)
+      .send({ error: "the title/url fields are required" });
+  }
+
   const blog = new Blog({
     title,
     author,
