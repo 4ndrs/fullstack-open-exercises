@@ -53,6 +53,22 @@ test("create a new blog post", async () => {
   expect(contents).toContain(newBlog.title);
 });
 
+test("if likes is missing, default to zero", async () => {
+  const newBlog = {
+    title: "Glow at the Velocity of Light",
+    author: "Aries Spring",
+    url: "https://blog.astra-anime.com/",
+  };
+
+  const response = await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(201)
+    .expect("Content-Type", /application\/json/);
+
+  expect(response.body.likes).toBe(0);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
