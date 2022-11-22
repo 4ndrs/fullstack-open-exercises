@@ -5,6 +5,7 @@ const initialBlogs = [
     title: "Management of a Novice Alchemist",
     author: "Sarasa Feed",
     url: "https://blog.shinmai-renkin.com/",
+    likes: 0,
   },
   {
     title: "The Daily Life of a Black Cat",
