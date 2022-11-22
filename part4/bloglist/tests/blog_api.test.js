@@ -69,6 +69,22 @@ test("if likes is missing, default to zero", async () => {
   expect(response.body.likes).toBe(0);
 });
 
+test("if title or url is missing, return 400", async () => {
+  const newBlog = {
+    title: "The Spiral of Happiness",
+    author: "Kikuri Hiroi",
+  };
+
+  await api.post("/api/blogs").send(newBlog).expect(400);
+
+  const newBlog2 = {
+    author: "Kikuri Hiroi",
+    url: "https://bocchi.rocks/blog/",
+  };
+
+  await api.post("/api/blogs").send(newBlog2).expect(400);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
