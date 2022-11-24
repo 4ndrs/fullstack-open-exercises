@@ -98,6 +98,27 @@ describe("create blog post", () => {
 
     await api.post("/api/blogs").send(newBlog2).expect(400);
   });
+
+  test("user is associated with created blog", async () => {
+    const firstUser = (await helper.usersInDb())[0];
+
+    const newBlog = {
+      title: "The Art of Being the Perfect Mob Character",
+      author: "Cid Kagenou",
+      url: "https://shadow-garden.jp/blog/",
+    };
+
+    const response = await api
+      .post("/api/blogs")
+      .send(newBlog)
+      .expect(201)
+      .expect("Content-Type", /application\/json/);
+
+    const blog = await helper.findBlog(response._body.id);
+
+    expect(blog.user).toBeDefined();
+    expect(blog.user.id).toBe(firstUser.id);
+  });
 });
 
 describe("delete blog post", () => {
