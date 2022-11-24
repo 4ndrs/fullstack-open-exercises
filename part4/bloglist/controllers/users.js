@@ -17,6 +17,12 @@ usersRouter.post("/", async (request, response) => {
       .send({ error: "both username and password must be provided" });
   }
 
+  if (username.length < 3 || password.length < 3) {
+    return response.status(400).send({
+      error: "both username and password must be at least 3 characters long",
+    });
+  }
+
   const existingUser = await User.findOne({ username });
 
   if (existingUser) {
