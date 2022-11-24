@@ -121,6 +121,28 @@ describe("update blog post", () => {
   });
 });
 
+describe("create user", () => {
+  test("verify the user created is in the database", async () => {
+    const newUser = {
+      username: "Delta",
+      password: "nanodesu",
+      name: "Delta the Loose Cannon",
+    };
+
+    await api
+      .post("/api/users")
+      .send(newUser)
+      .expect(201)
+      .expect("Content-Type", /application\/json/);
+
+    const usersAtEnd = await helper.usersInDb();
+    expect(usersAtEnd).toHaveLength(helper.initialUsers.length + 1);
+
+    const contents = usersAtEnd.map((user) => user.name);
+    expect(contents).toContain(newUser.name);
+  });
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });

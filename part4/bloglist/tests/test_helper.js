@@ -1,4 +1,5 @@
 const Blog = require("../models/blog.js");
+const User = require("../models/user.js");
 
 const initialBlogs = [
   {
@@ -63,12 +64,36 @@ const initialBlogs = [
   },
 ];
 
+const initialUsers = [
+  {
+    username: "alpha",
+    password: "shadow",
+    name: "Alpha",
+  },
+  {
+    username: "gamma",
+    password: "shadow",
+    name: "Gamma the Weak",
+  },
+  {
+    username: "epsilon",
+    password: "shadow",
+    name: "Epsilon the Faithful",
+  },
+];
+
 const blogsInDb = async () => {
   const blogs = await Blog.find({});
   return blogs.map((blog) => blog.toJSON());
 };
 
+const usersInDb = async () => {
+  const users = await User.find({});
+  return users.map((user) => user.toJSON());
+};
+
 module.exports = {
   initialBlogs,
   blogsInDb,
+  usersInDb,
 };
