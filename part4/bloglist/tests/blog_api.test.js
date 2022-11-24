@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const supertest = require("supertest");
+const bcrypt = require("bcrypt");
 
 const app = require("../app.js");
 const Blog = require("../models/blog.js");
@@ -12,8 +13,18 @@ beforeEach(async () => {
   await Blog.deleteMany({});
   await Blog.insertMany(helper.initialBlogs);
 
+  const passwordHash = await bcrypt.hash("shadow", 10);
+  const users = helper.initialUsers.map((user) => {
+    const { username, name } = user;
+    return {
+      username,
+      passwordHash,
+      name,
+    };
+  });
+
   await User.deleteMany({});
-  await User.insertMany(helper.initialUsers);
+  await User.insertMany(users);
 });
 
 describe("when some blog posts exist", () => {
