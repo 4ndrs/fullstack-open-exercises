@@ -171,6 +171,16 @@ describe("create user", () => {
     await api.post("/api/users").send(newUser1).expect(400);
     await api.post("/api/users").send(newUser2).expect(400);
   });
+
+  test("duplicate usernames are not created", async () => {
+    const users = await helper.usersInDb();
+    const newUser = {
+      username: users[0].username,
+      password: "shadow",
+    };
+
+    await api.post("/api/users").send(newUser).expect(400);
+  });
 });
 
 afterAll(() => {
