@@ -10,6 +10,13 @@ usersRouter.get("/", async (request, response) => {
 
 usersRouter.post("/", async (request, response) => {
   const { name, username, password } = request.body;
+
+  if ([username, password].includes(undefined)) {
+    return response
+      .status(400)
+      .send({ error: "both username and password must be provided" });
+  }
+
   const existingUser = await User.findOne({ username });
 
   if (existingUser) {
