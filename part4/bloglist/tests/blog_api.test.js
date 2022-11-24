@@ -156,6 +156,21 @@ describe("create user", () => {
     const contents = usersAtEnd.map((user) => user.name);
     expect(contents).toContain(newUser.name);
   });
+
+  test("missing username or password are not created", async () => {
+    const newUser1 = {
+      username: "Delta",
+      name: "Delta the Loose Cannon",
+    };
+
+    const newUser2 = {
+      password: "nanodesu",
+      name: "Delta the Loose Cannon",
+    };
+
+    await api.post("/api/users").send(newUser1).expect(400);
+    await api.post("/api/users").send(newUser2).expect(400);
+  });
 });
 
 afterAll(() => {
