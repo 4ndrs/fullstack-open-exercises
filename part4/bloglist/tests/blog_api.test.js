@@ -3,6 +3,7 @@ const supertest = require("supertest");
 
 const app = require("../app.js");
 const Blog = require("../models/blog.js");
+const User = require("../models/user.js");
 const helper = require("./test_helper.js");
 
 const api = supertest(app);
@@ -10,6 +11,9 @@ const api = supertest(app);
 beforeEach(async () => {
   await Blog.deleteMany({});
   await Blog.insertMany(helper.initialBlogs);
+
+  await User.deleteMany({});
+  await User.insertMany(helper.initialUsers);
 });
 
 describe("when some blog posts exist", () => {
