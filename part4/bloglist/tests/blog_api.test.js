@@ -181,6 +181,21 @@ describe("create user", () => {
 
     await api.post("/api/users").send(newUser).expect(400);
   });
+
+  test("username and password are at least 3 characters long", async () => {
+    const newUser1 = {
+      username: "Delta",
+      password: "12",
+    };
+
+    const newUser2 = {
+      username: "De",
+      password: "123",
+    };
+
+    await api.post("/api/users").send(newUser1).expect(400);
+    await api.post("/api/users").send(newUser2).expect(400);
+  });
 });
 
 afterAll(() => {
