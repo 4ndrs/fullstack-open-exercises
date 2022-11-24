@@ -92,9 +92,20 @@ const usersInDb = async () => {
   return users.map((user) => user.toJSON());
 };
 
+const getBlogById = async (id) => {
+  const blog = await Blog.findById(id).populate("user", {
+    username: 1,
+    name: 1,
+    id: 1,
+  });
+
+  return blog.toJSON();
+};
+
 module.exports = {
   initialBlogs,
   initialUsers,
   blogsInDb,
   usersInDb,
+  getBlogById,
 };
