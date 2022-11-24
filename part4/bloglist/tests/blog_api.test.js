@@ -114,7 +114,12 @@ describe("create blog post", () => {
       .expect(201)
       .expect("Content-Type", /application\/json/);
 
-    const blog = await helper.findBlog(response._body.id);
+    const blog = (
+      await api
+        .get(`/api/blogs/${response._body.id}`)
+        .expect(200)
+        .expect("Content-Type", /application\/json/)
+    )._body;
 
     expect(blog.user).toBeDefined();
     expect(blog.user.id).toBe(firstUser.id);
