@@ -94,6 +94,7 @@ const usersInDb = async () => {
 
 module.exports = {
   initialBlogs,
+  initialUsers,
   blogsInDb,
   usersInDb,
 };
