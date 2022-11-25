@@ -100,8 +100,6 @@ describe("create blog post", () => {
   });
 
   test("user is associated with created blog", async () => {
-    const firstUser = (await helper.usersInDb())[0];
-
     const newBlog = {
       title: "The Art of Being the Perfect Mob Character",
       author: "Cid Kagenou",
@@ -115,9 +113,13 @@ describe("create blog post", () => {
       .expect("Content-Type", /application\/json/);
 
     const blog = await helper.getBlogById(response._body.id);
+    const user = (await helper.usersInDb())[0];
 
     expect(blog.user).toBeDefined();
-    expect(blog.user.id).toBe(firstUser.id);
+    expect(blog.user.id).toBe(user.id);
+
+    expect(user.blogs[0]).toBeDefined();
+    expect(user.blogs[0].id).toBe(blog.id);
   });
 });
 
