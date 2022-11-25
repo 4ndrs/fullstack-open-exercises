@@ -39,6 +39,16 @@ describe("token-based authentication", () => {
 
     expect(response.body.token).toBeDefined();
   });
+
+  test("when using invalid credentials returns 401", async () => {
+    const { username } = (await helper.usersInDb())[0];
+    const password = "invalidPassword";
+
+    await api.post("/api/login").send({ username, password }).expect(401);
+
+    const [username2, password2] = ["yadayada", "yada"];
+    await api.post("/api/login").send({ username2, password2 }).expect(401);
+  });
 });
 
 describe("when some blog posts exist", () => {
