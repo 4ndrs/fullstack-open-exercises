@@ -29,7 +29,7 @@ beforeEach(async () => {
 
 describe("token-based authentication", () => {
   test("request a token", async () => {
-    const { username, password } = (await helper.usersInDb())[0];
+    const { username, password } = helper.initialUsers[0];
 
     const response = await api
       .post("/api/login")
