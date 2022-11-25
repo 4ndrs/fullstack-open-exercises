@@ -27,6 +27,20 @@ beforeEach(async () => {
   await User.insertMany(users);
 });
 
+describe("token-based authentication", () => {
+  test("request a token", async () => {
+    const { username, password } = (await helper.usersInDb())[0];
+
+    const response = await api
+      .post("/api/login")
+      .send({ username, password })
+      .expect(200)
+      .expect("Content-Type", /application\/json/);
+
+    expect(response.body.token).toBeDefined();
+  });
+});
+
 describe("when some blog posts exist", () => {
   test("all blogs are returned in the JSON format", async () => {
     const response = await api
