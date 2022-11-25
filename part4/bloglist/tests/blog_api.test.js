@@ -72,6 +72,17 @@ describe("when some blog posts exist", () => {
   });
 });
 
+const getToken = async (username_) => {
+  const { username, password } = helper.initialUsers.find(
+    (user) => user.username === username_
+  );
+
+  const token = (await api.post("/api/login").send({ username, password })).body
+    .token;
+
+  return token;
+};
+
 describe("create blog post", () => {
   test("fails if no token is sent with the request", async () => {
     const newBlog = {
@@ -113,6 +124,8 @@ describe("create blog post", () => {
   });
 
   test("if likes is missing, default to zero", async () => {
+    const token = await getToken("gamma");
+
     const newBlog = {
       title: "Glow at the Velocity of Light",
       author: "Aries Spring",
@@ -121,6 +134,7 @@ describe("create blog post", () => {
 
     const response = await api
       .post("/api/blogs")
+      .set("Authorization", `Bearer ${token}`)
       .send(newBlog)
       .expect(201)
       .expect("Content-Type", /application\/json/);
@@ -129,42 +143,29 @@ describe("create blog post", () => {
   });
 
   test("if title or url is missing, return 400", async () => {
+    const token = await getToken("gamma");
+
     const newBlog = {
       title: "The Spiral of Happiness",
       author: "Kikuri Hiroi",
     };
 
-    await api.post("/api/blogs").send(newBlog).expect(400);
+    await api
+      .post("/api/blogs")
+      .set("Authorization", `Bearer ${token}`)
+      .send(newBlog)
+      .expect(400);
 
     const newBlog2 = {
       author: "Kikuri Hiroi",
       url: "https://bocchi.rocks/blog/",
     };
 
-    await api.post("/api/blogs").send(newBlog2).expect(400);
-  });
-
-  test("user is associated with created blog", async () => {
-    const newBlog = {
-      title: "The Art of Being the Perfect Mob Character",
-      author: "Cid Kagenou",
-      url: "https://shadow-garden.jp/blog/",
-    };
-
-    const response = await api
+    await api
       .post("/api/blogs")
-      .send(newBlog)
-      .expect(201)
-      .expect("Content-Type", /application\/json/);
-
-    const blog = await helper.getBlogById(response._body.id);
-    const user = (await helper.usersInDb())[0];
-
-    expect(blog.user).toBeDefined();
-    expect(blog.user.id).toBe(user.id);
-
-    expect(user.blogs[0]).toBeDefined();
-    expect(user.blogs[0].id).toBe(blog.id);
+      .set("Authorization", `Bearer ${token}`)
+      .send(newBlog2)
+      .expect(400);
   });
 });
 
