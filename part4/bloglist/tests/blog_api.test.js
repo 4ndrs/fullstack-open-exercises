@@ -47,7 +47,10 @@ describe("token-based authentication", () => {
     await api.post("/api/login").send({ username, password }).expect(401);
 
     const [username2, password2] = ["yadayada", "yada"];
-    await api.post("/api/login").send({ username2, password2 }).expect(401);
+    await api
+      .post("/api/login")
+      .send({ username: username2, password: password2 })
+      .expect(401);
   });
 });
 
