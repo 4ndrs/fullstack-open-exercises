@@ -85,6 +85,11 @@ describe("create blog post", () => {
   });
 
   test("verify the post created is in the database", async () => {
+    const { username, password } = helper.initialUsers[0];
+    const token = (
+      await api.post("/api/login").send({ username, password }).expect(200)
+    ).body.token;
+
     const newBlog = {
       title: "Alchemy 101: The Importance of Networking",
       author: "Sarasa Feed",
@@ -92,17 +97,19 @@ describe("create blog post", () => {
       likes: 0,
     };
 
-    await api
-      .post("/api/blogs")
-      .send(newBlog)
-      .expect(201)
-      .expect("Content-Type", /application\/json/);
+    const blogId = (
+      await api
+        .post("/api/blogs")
+        .set("Authorization", `Bearer ${token}`)
+        .send(newBlog)
+        .expect(201)
+        .expect("Content-Type", /application\/json/)
+    ).body.id;
 
-    const blogsAtEnd = await helper.blogsInDb();
-    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
+    const blog = await helper.getBlogById(blogId);
 
-    const contents = blogsAtEnd.map((blog) => blog.title);
-    expect(contents).toContain(newBlog.title);
+    expect(blog.title).toBe(newBlog.title);
+    expect(blog.user.username).toBe(username);
   });
 
   test("if likes is missing, default to zero", async () => {
