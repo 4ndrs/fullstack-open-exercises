@@ -73,6 +73,17 @@ describe("when some blog posts exist", () => {
 });
 
 describe("create blog post", () => {
+  test("fails if no token is sent with the request", async () => {
+    const newBlog = {
+      title: "This Must Fail",
+      author: "tester007",
+      url: "localhost:3001/jest",
+      likes: 0,
+    };
+
+    await api.post("/api/blogs").send(newBlog).expect(401);
+  });
+
   test("verify the post created is in the database", async () => {
     const newBlog = {
       title: "Alchemy 101: The Importance of Networking",
