@@ -189,6 +189,16 @@ describe("delete blog post", () => {
     await api.delete(`/api/blogs/${blog.id}`).expect(401);
   });
 
+  test("deleting with a different token id returns 401", async () => {
+    const token = await getToken("alpha"); // all blogs are owned by epsilon
+    const blog = (await helper.blogsInDb())[0];
+
+    await api
+      .delete(`/api/blogs/${blog.id}`)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(401);
+  });
+
   test("deleting an existing id returns 204", async () => {
     const blogsAtStart = await helper.blogsInDb();
     const blogToDelete = blogsAtStart[0];
