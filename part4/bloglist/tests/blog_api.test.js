@@ -228,6 +228,16 @@ describe("delete blog post", () => {
 
     expect(contents).not.toContain(blog.title);
   });
+
+  test("deleting with invalid blog id returns 400", async () => {
+    const token = await getToken("epsilon"); // all blogs are owned by epsilon
+    const blogId = "invalidId321";
+
+    await api
+      .delete(`/api/blogs/${blogId}`)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400);
+  });
 });
 
 describe("update blog post", () => {
