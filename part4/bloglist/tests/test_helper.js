@@ -82,6 +82,13 @@ const initialUsers = [
   },
 ];
 
+const disposableBlog = {
+  title: "A Place Holder",
+  author: "Test",
+  url: "localhost/jest",
+  likes: 0,
+};
+
 const blogsInDb = async () => {
   const blogs = await Blog.find({}).populate("user", {
     username: 1,
@@ -116,6 +123,7 @@ const getBlogById = async (id) => {
 module.exports = {
   initialBlogs,
   initialUsers,
+  disposableBlog,
   blogsInDb,
   usersInDb,
   getBlogById,
