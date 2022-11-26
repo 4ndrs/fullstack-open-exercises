@@ -170,6 +170,12 @@ describe("create blog post", () => {
 });
 
 describe("delete blog post", () => {
+  test("deleting without token returns 401", async () => {
+    const blog = (await helper.blogsInDb())[0];
+
+    await api.delete(`/api/blogs/${blog.id}`).expect(401);
+  });
+
   test("deleting an existing id returns 204", async () => {
     const blogsAtStart = await helper.blogsInDb();
     const blogToDelete = blogsAtStart[0];
