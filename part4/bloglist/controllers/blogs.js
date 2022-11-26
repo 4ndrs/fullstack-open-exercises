@@ -47,6 +47,10 @@ blogsRouter.delete("/:id", async (request, response) => {
 
   const blog = await Blog.findById(request.params.id);
 
+  if (!blog) {
+    return response.status(400).send({ error: "invalid blog id" });
+  }
+
   if (request.user._id.toString() !== blog.user.toString()) {
     return response
       .status(401)
