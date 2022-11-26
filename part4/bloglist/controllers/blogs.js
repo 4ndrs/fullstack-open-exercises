@@ -69,6 +69,10 @@ blogsRouter.put("/:id", async (request, response) => {
     new: true,
   });
 
+  if (!updatedBlog) {
+    return response.status(400).send({ error: "invalid blog id" });
+  }
+
   response.json(updatedBlog);
 });
 
