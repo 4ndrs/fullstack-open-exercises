@@ -15,6 +15,8 @@ const userExtractor = async (request, response, next) => {
   const id = request.token && jwt.verify(request.token, process.env.SECRET).id;
   if (id) {
     request.user = await User.findById(id);
+  } else {
+    request.user = null;
   }
 
   next();
