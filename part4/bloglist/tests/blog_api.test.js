@@ -242,8 +242,7 @@ describe("delete blog post", () => {
 
 describe("update blog post", () => {
   test("update likes by one", async () => {
-    const blogsAtStart = await helper.blogsInDb();
-    const blogToUpdate = blogsAtStart[0];
+    const blogToUpdate = (await helper.blogsInDb())[0];
 
     await api
       .put(`/api/blogs/${blogToUpdate.id}`)
@@ -257,6 +256,12 @@ describe("update blog post", () => {
     console.log(blogsAtEnd);
 
     expect(updatedBlog.likes).toBe(blogToUpdate.likes + 1);
+  });
+
+  test("updating invalid blog id returns 400", async () => {
+    const blogId = "invalidId321";
+
+    await api.put(`/api/blogs/${blogId}`).send({ likes: 1 }).expect(400);
   });
 });
 
