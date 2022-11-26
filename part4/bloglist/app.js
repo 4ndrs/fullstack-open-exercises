@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 
+require("express-async-errors");
+
 const blogsRouter = require("./controllers/blogs.js");
 const usersRouter = require("./controllers/users.js");
 const loginRouter = require("./controllers/login.js");
@@ -25,5 +27,7 @@ app.use(
 
 app.use("/api/users", usersRouter);
 app.use("/api/login", loginRouter);
+
+app.use(middleware.errorHandler);
 
 module.exports = app;
