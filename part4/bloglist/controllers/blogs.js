@@ -1,8 +1,6 @@
 const blogsRouter = require("express").Router();
-const jwt = require("jsonwebtoken");
 
 const Blog = require("../models/blog.js");
-const User = require("../models/user.js");
 
 blogsRouter.get("/", async (request, response) => {
   const blogs = await Blog.find({}).populate("user", {
@@ -16,16 +14,9 @@ blogsRouter.get("/", async (request, response) => {
 blogsRouter.post("/", async (request, response) => {
   const { title, author, likes, url } = request.body;
 
-  let userId;
-  const invalidToken =
-    !request.token ||
-    !(userId = jwt.verify(request.token, process.env.SECRET).id);
-
-  if (invalidToken) {
+  if (!request.user) {
     return response.status(401).send({ error: "token missing or invalid" });
   }
-
-  const user = await User.findById(userId);
 
   if ([title, url].includes(undefined)) {
     return response
@@ -38,31 +29,25 @@ blogsRouter.post("/", async (request, response) => {
     author,
     url,
     likes: likes || 0,
-    user: user._id,
+    user: request.user._id,
   });
 
   const savedBlog = await blog.save();
 
-  user.blogs = user.blogs.concat(savedBlog._id);
-  await user.save();
+  request.user.blogs = request.user.blogs.concat(savedBlog._id);
+  await request.user.save();
 
   response.status(201).json(savedBlog);
 });
 
 blogsRouter.delete("/:id", async (request, response) => {
-  let userId;
-  const invalidToken =
-    !request.token ||
-    !(userId = jwt.verify(request.token, process.env.SECRET).id);
-
-  if (invalidToken) {
+  if (!request.user) {
     return response.status(401).send({ error: "token missing or invalid" });
   }
 
-  const user = await User.findById(userId);
   const blog = await Blog.findById(request.params.id);
 
-  if (user._id.toString() !== blog.user.toString()) {
+  if (request.user._id.toString() !== blog.user.toString()) {
     return response
       .status(401)
       .send({ error: "the requested resource is not owned by the user" });
