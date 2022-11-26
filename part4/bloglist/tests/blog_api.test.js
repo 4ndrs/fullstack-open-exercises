@@ -98,14 +98,17 @@ describe("when some blog posts exist", () => {
 
 describe("create blog post", () => {
   test("if no token is sent with the request, return 401", async () => {
-    const newBlog = {
-      title: "This Must Fail",
-      author: "tester007",
-      url: "localhost:3001/jest",
-      likes: 0,
-    };
+    await api.post("/api/blogs").send(helper.disposableBlog).expect(401);
+  });
 
-    await api.post("/api/blogs").send(newBlog).expect(401);
+  test("gibberish token returns 401", async () => {
+    const token = "gibberishToken1234";
+
+    await api
+      .post("/api/blogs")
+      .set("Authorization", `Bearer ${token}`)
+      .send(helper.disposableBlog)
+      .expect(401);
   });
 
   test("verify the post created is in the database", async () => {
@@ -187,6 +190,16 @@ describe("delete blog post", () => {
     const blog = (await helper.blogsInDb())[0];
 
     await api.delete(`/api/blogs/${blog.id}`).expect(401);
+  });
+
+  test("deleting with gibberish token returns 401", async () => {
+    const blog = (await helper.blogsInDb())[0];
+    const token = "GibberishToken321";
+
+    await api
+      .delete(`/api/blogs/${blog.id}`)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(401);
   });
 
   test("deleting with a different token id returns 401", async () => {
