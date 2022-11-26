@@ -84,7 +84,7 @@ const getToken = async (username_) => {
 };
 
 describe("create blog post", () => {
-  test("fails if no token is sent with the request", async () => {
+  test("if no token is sent with the request, return 401", async () => {
     const newBlog = {
       title: "This Must Fail",
       author: "tester007",
