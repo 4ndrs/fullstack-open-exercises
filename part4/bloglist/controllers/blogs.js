@@ -50,7 +50,25 @@ blogsRouter.post("/", async (request, response) => {
 });
 
 blogsRouter.delete("/:id", async (request, response) => {
-  await Blog.findOneAndDelete(request.params.id);
+  let userId;
+  const invalidToken =
+    !request.token ||
+    !(userId = jwt.verify(request.token, process.env.SECRET).id);
+
+  if (invalidToken) {
+    return response.status(401).send({ error: "token missing or invalid" });
+  }
+
+  const user = await User.findById(userId);
+  const blog = await Blog.findById(request.params.id);
+
+  if (user._id.toString() !== blog.user.toString()) {
+    return response
+      .status(401)
+      .send({ error: "the requested resource is not owned by the user" });
+  }
+
+  await Blog.findByIdAndDelete(blog._id);
   response.status(204).end();
 });
 
