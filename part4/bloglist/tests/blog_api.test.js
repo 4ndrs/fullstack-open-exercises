@@ -9,13 +9,23 @@ const helper = require("./test_helper.js");
 
 const api = supertest(app);
 
+const getToken = async (username_) => {
+  const { username, password } = helper.initialUsers.find(
+    (user) => user.username === username_
+  );
+
+  const token = (await api.post("/api/login").send({ username, password })).body
+    .token;
+
+  return token;
+};
+
 beforeEach(async () => {
   await Blog.deleteMany({});
-  await Blog.insertMany(helper.initialBlogs);
+  await User.deleteMany({});
 
   const passwordHash = await bcrypt.hash("shadow", 10);
-  const users = helper.initialUsers.map((user) => {
-    const { username, name } = user;
+  const users = helper.initialUsers.map(({ username, name }) => {
     return {
       username,
       passwordHash,
@@ -23,8 +33,22 @@ beforeEach(async () => {
     };
   });
 
-  await User.deleteMany({});
   await User.insertMany(users);
+
+  const user = await User.findOne({ username: "epsilon" });
+  for (const { title, author, url, likes } of helper.initialBlogs) {
+    const blog = new Blog({
+      title,
+      author,
+      url,
+      likes,
+      user: user._id,
+    });
+
+    const savedBlog = await blog.save();
+    user.blogs = user.blogs.concat(savedBlog._id);
+    await user.save();
+  }
 });
 
 describe("token-based authentication", () => {
@@ -71,17 +95,6 @@ describe("when some blog posts exist", () => {
     expect(blog.id).toBeDefined();
   });
 });
-
-const getToken = async (username_) => {
-  const { username, password } = helper.initialUsers.find(
-    (user) => user.username === username_
-  );
-
-  const token = (await api.post("/api/login").send({ username, password })).body
-    .token;
-
-  return token;
-};
 
 describe("create blog post", () => {
   test("if no token is sent with the request, return 401", async () => {
