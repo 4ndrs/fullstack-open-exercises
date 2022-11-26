@@ -199,18 +199,21 @@ describe("delete blog post", () => {
       .expect(401);
   });
 
-  test("deleting an existing id returns 204", async () => {
-    const blogsAtStart = await helper.blogsInDb();
-    const blogToDelete = blogsAtStart[0];
+  test("deleting with correct token id returns 204", async () => {
+    const token = await getToken("epsilon"); // all blogs are owned by epsilon
+    const blog = (await helper.blogsInDb())[0];
 
-    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+    await api
+      .delete(`/api/blogs/${blog.id}`)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(204);
 
     const blogsAtEnd = await helper.blogsInDb();
 
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1);
     const contents = blogsAtEnd.map((blog) => blog.title);
 
-    expect(contents).not.toContain(blogToDelete.title);
+    expect(contents).not.toContain(blog.title);
   });
 });
 
