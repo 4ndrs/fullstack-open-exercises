@@ -13,23 +13,19 @@ blogsRouter.get("/", async (request, response) => {
   response.json(blogs);
 });
 
-const getToken = (request) => {
-  const authorization = request.get("authorization");
-  if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
-    return authorization.split(" ")[1];
-  }
-};
-
 blogsRouter.post("/", async (request, response) => {
   const { title, author, likes, url } = request.body;
-  const token = getToken(request);
 
-  let decodedId;
-  if (!token || !(decodedId = jwt.verify(token, process.env.SECRET).id)) {
+  let userId;
+  const invalidToken =
+    !request.token ||
+    !(userId = jwt.verify(request.token, process.env.SECRET).id);
+
+  if (invalidToken) {
     return response.status(401).send({ error: "token missing or invalid" });
   }
 
-  const user = await User.findById(decodedId);
+  const user = await User.findById(userId);
 
   if ([title, url].includes(undefined)) {
     return response
