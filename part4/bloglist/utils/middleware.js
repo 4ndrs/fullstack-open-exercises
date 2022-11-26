@@ -29,6 +29,12 @@ const errorHandler = (error, request, response, next) => {
     });
   }
 
+  if (error.name === "CastError") {
+    return response.status(400).json({
+      error: "invalid blog id",
+    });
+  }
+
   console.log(error);
   next(error);
 };
