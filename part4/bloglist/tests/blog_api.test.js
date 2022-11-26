@@ -232,9 +232,15 @@ describe("delete blog post", () => {
   test("deleting with invalid blog id returns 400", async () => {
     const token = await getToken("epsilon"); // all blogs are owned by epsilon
     const blogId = "invalidId321";
+    const blogId2 = 12345;
 
     await api
       .delete(`/api/blogs/${blogId}`)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(400);
+
+    await api
+      .delete(`/api/blogs/${blogId2}`)
       .set("Authorization", `Bearer ${token}`)
       .expect(400);
   });
@@ -260,8 +266,10 @@ describe("update blog post", () => {
 
   test("updating invalid blog id returns 400", async () => {
     const blogId = "invalidId321";
+    const blogId2 = 12345;
 
     await api.put(`/api/blogs/${blogId}`).send({ likes: 1 }).expect(400);
+    await api.put(`/api/blogs/${blogId2}`).send({ likes: 1 }).expect(400);
   });
 });
 
