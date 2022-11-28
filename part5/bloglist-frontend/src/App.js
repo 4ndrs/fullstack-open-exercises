@@ -9,7 +9,10 @@ const App = () => {
   return (
     <>
       {user ? (
-        <Blogs loggedUserName={user.name} />
+        <>
+          <h2>blogs</h2>
+          <Blogs loggedUserName={user.name} />
+        </>
       ) : (
         <LoginForm setUser={setUser} />
       )}
