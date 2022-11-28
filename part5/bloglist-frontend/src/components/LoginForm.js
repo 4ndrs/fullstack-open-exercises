@@ -10,6 +10,7 @@ const LoginForm = ({ setUser }) => {
     event.preventDefault();
 
     const user = await loginService.login(username, password);
+    window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
     setUser(user);
   };
 
