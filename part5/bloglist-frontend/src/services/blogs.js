@@ -12,15 +12,11 @@ const getAll = async () => {
 };
 
 const create = async (newBlog, token) => {
-  try {
-    const response = await axios.post(endpoint, newBlog, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+  const response = await axios.post(endpoint, newBlog, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
-    return response.data;
-  } catch (exception) {
-    console.log(exception);
-  }
+  return response.data;
 };
 
 const blogService = { getAll, create };

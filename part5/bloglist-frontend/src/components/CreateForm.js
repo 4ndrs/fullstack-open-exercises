@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import blogService from "../services/blogs.js";
 
-const CreateForm = ({ blogs, setBlogs, token }) => {
+const CreateForm = ({ blogs, setBlogs, token, setNotification }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
@@ -11,11 +11,19 @@ const CreateForm = ({ blogs, setBlogs, token }) => {
     event.preventDefault();
     const newBlog = { title, author, url };
 
-    const savedBlog = await blogService.create(newBlog, token);
-    setBlogs(blogs.concat(savedBlog));
-    setTitle("");
-    setAuthor("");
-    setUrl("");
+    try {
+      const savedBlog = await blogService.create(newBlog, token);
+      const text = `${savedBlog.title} by ${savedBlog.author} added`;
+
+      setBlogs(blogs.concat(savedBlog));
+      setTitle("");
+      setAuthor("");
+      setUrl("");
+
+      setNotification({ text, error: false });
+    } catch (exception) {
+      console.log(exception);
+    }
   };
   return (
     <form onSubmit={handleCreate}>

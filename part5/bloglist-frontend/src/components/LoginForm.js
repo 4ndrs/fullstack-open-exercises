@@ -2,16 +2,25 @@ import { useState } from "react";
 
 import loginService from "../services/login";
 
-const LoginForm = ({ setUser }) => {
+const LoginForm = ({ setUser, setNotification }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = async (event) => {
     event.preventDefault();
 
-    const user = await loginService.login(username, password);
-    window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
-    setUser(user);
+    try {
+      const user = await loginService.login(username, password);
+      window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
+      setUser(user);
+    } catch (exception) {
+      if (exception.response.status === 401) {
+        const text = exception.response.data.error;
+        setNotification({ text, error: true });
+      } else {
+        console.log(exception);
+      }
+    }
   };
 
   return (
