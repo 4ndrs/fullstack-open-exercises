@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Blogs from "./components/Blogs";
 import LoginForm from "./components/LoginForm";
 import LoggedUser from "./components/LoggedUser";
+import CreateForm from "./components/CreateForm";
 import blogService from "./services/blogs";
 
 const App = () => {
@@ -28,6 +29,8 @@ const App = () => {
     <>
       <h2>blogs</h2>
       <LoggedUser setUser={setUser} userName={user.name} />
+      <h2>create new</h2>
+      <CreateForm blogs={blogs} setBlogs={setBlogs} token={user.token} />
       <Blogs blogs={blogs} />
     </>
   );
