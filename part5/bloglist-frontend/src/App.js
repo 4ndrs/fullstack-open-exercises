@@ -26,6 +26,35 @@ const App = () => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
   }, []);
 
+  const handleUpdateBlog = async (blog) => {
+    try {
+      const updatedBlog = await blogService.update(blog, blog.id);
+      setBlogs(
+        blogs.map((blog) => {
+          if (blog.id !== updatedBlog.id) {
+            return blog;
+          }
+          return updatedBlog;
+        })
+      );
+    } catch (exception) {
+      console.log(exception);
+    }
+  };
+
+  const handleRemoveBlog = async (blog) => {
+    const msg = `Remove blog ${blog.title} by ${blog.author}`;
+
+    if (window.confirm(msg)) {
+      try {
+        await blogService.remove(blog.id, user.token);
+        setBlogs(blogs.filter((b) => b.id !== blog.id));
+      } catch (exception) {
+        console.log(exception);
+      }
+    }
+  };
+
   if (!user) {
     return (
       <>
@@ -55,7 +84,12 @@ const App = () => {
           setHidden={createFormTogglerRef.current}
         />
       </Toggler>
-      <Blogs blogs={blogs} setBlogs={setBlogs} user={user} />
+      <Blogs
+        blogs={blogs}
+        handleUpdateBlog={handleUpdateBlog}
+        handleRemoveBlog={handleRemoveBlog}
+        user={user}
+      />
     </>
   );
 };

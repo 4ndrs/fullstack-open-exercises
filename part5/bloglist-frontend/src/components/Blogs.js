@@ -1,6 +1,6 @@
 import Blog from "./Blog";
 
-const Blogs = ({ blogs, setBlogs, user }) => {
+const Blogs = ({ blogs, handleUpdateBlog, handleRemoveBlog, user }) => {
   return (
     <>
       {blogs
@@ -10,7 +10,8 @@ const Blogs = ({ blogs, setBlogs, user }) => {
             key={blog.id}
             blog={blog}
             blogs={blogs}
-            setBlogs={setBlogs}
+            handleUpdateBlog={handleUpdateBlog}
+            handleRemoveBlog={handleRemoveBlog}
             user={user}
           />
         ))}

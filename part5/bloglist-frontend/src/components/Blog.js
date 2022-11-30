@@ -1,9 +1,8 @@
 import { useState } from "react";
 
-import blogService from "../services/blogs";
 import "./Blog.css";
 
-const Blog = ({ blog, blogs, setBlogs, user }) => {
+const Blog = ({ blog, handleUpdateBlog, handleRemoveBlog, user }) => {
   const [showDetails, setShowDetails] = useState(false);
 
   return (
@@ -13,49 +12,29 @@ const Blog = ({ blog, blogs, setBlogs, user }) => {
         {showDetails ? "hide" : "view"}
       </button>
       {showDetails && (
-        <Details blog={blog} blogs={blogs} setBlogs={setBlogs} user={user} />
+        <Details
+          blog={blog}
+          handleUpdateBlog={handleUpdateBlog}
+          handleRemoveBlog={handleRemoveBlog}
+          user={user}
+        />
       )}
     </div>
   );
 };
 
-const Details = ({ blog, blogs, setBlogs, user }) => {
+const Details = ({ blog, handleUpdateBlog, handleRemoveBlog, user }) => {
   const handleLike = async () => {
     const likedBlog = {
-      user: blog.user?.id,
+      ...blog,
       likes: blog.likes + 1,
-      author: blog.author,
-      title: blog.title,
-      url: blog.url,
     };
 
-    try {
-      const updatedBlog = await blogService.update(likedBlog, blog.id);
-      setBlogs(
-        blogs.map((blog) => {
-          if (blog.id !== updatedBlog.id) {
-            return blog;
-          }
-
-          return { ...blog, likes: updatedBlog.likes };
-        })
-      );
-    } catch (exception) {
-      console.log(exception);
-    }
+    await handleUpdateBlog(likedBlog);
   };
 
   const handleRemove = async () => {
-    const msg = `Remove blog ${blog.title} by ${blog.author}`;
-
-    if (window.confirm(msg)) {
-      try {
-        await blogService.remove(blog.id, user.token);
-        setBlogs(blogs.filter((b) => b.id !== blog.id));
-      } catch (exception) {
-        console.log(exception);
-      }
-    }
+    await handleRemoveBlog(blog);
   };
 
   return (
