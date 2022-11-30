@@ -55,7 +55,7 @@ const App = () => {
           setHidden={createFormTogglerRef.current}
         />
       </Toggler>
-      <Blogs blogs={blogs} />
+      <Blogs blogs={blogs} setBlogs={setBlogs} />
     </>
   );
 };
