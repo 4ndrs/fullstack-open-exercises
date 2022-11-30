@@ -13,7 +13,7 @@ const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [notification, setNotification] = useState({ text: "", error: false });
 
-  const formTogglerRef = useRef(null);
+  const createFormTogglerRef = useRef(null);
 
   useEffect(() => {
     const user = window.localStorage.getItem("loggedBlogAppUser");
@@ -46,13 +46,13 @@ const App = () => {
         setNotification={setNotification}
       />
       <LoggedUser setUser={setUser} userName={user.name} />
-      <Toggler label="new note" ref={formTogglerRef}>
+      <Toggler label="create new blog" ref={createFormTogglerRef}>
         <CreateForm
           blogs={blogs}
           setBlogs={setBlogs}
           token={user.token}
           setNotification={setNotification}
-          setHidden={formTogglerRef.current}
+          setHidden={createFormTogglerRef.current}
         />
       </Toggler>
       <Blogs blogs={blogs} />
