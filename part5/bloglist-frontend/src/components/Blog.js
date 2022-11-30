@@ -3,7 +3,7 @@ import { useState } from "react";
 import blogService from "../services/blogs";
 import "./Blog.css";
 
-const Blog = ({ blog, blogs, setBlogs }) => {
+const Blog = ({ blog, blogs, setBlogs, user }) => {
   const [showDetails, setShowDetails] = useState(false);
 
   return (
@@ -12,12 +12,14 @@ const Blog = ({ blog, blogs, setBlogs }) => {
       <button onClick={() => setShowDetails(!showDetails)}>
         {showDetails ? "hide" : "view"}
       </button>
-      {showDetails && <Details blog={blog} blogs={blogs} setBlogs={setBlogs} />}
+      {showDetails && (
+        <Details blog={blog} blogs={blogs} setBlogs={setBlogs} user={user} />
+      )}
     </div>
   );
 };
 
-const Details = ({ blog, blogs, setBlogs }) => {
+const Details = ({ blog, blogs, setBlogs, user }) => {
   const handleLike = async () => {
     const likedBlog = {
       user: blog.user?.id,
@@ -43,6 +45,19 @@ const Details = ({ blog, blogs, setBlogs }) => {
     }
   };
 
+  const handleRemove = async () => {
+    const msg = `Remove blog ${blog.title} by ${blog.author}`;
+
+    if (window.confirm(msg)) {
+      try {
+        await blogService.remove(blog.id, user.token);
+        setBlogs(blogs.filter((b) => b.id !== blog.id));
+      } catch (exception) {
+        console.log(exception);
+      }
+    }
+  };
+
   return (
     <>
       <div>{blog.url}</div>
@@ -51,6 +66,11 @@ const Details = ({ blog, blogs, setBlogs }) => {
         <button onClick={handleLike}>like</button>
       </div>
       <div>{blog.user?.name}</div>
+      <div>
+        {user.username === blog.user?.username && (
+          <button onClick={handleRemove}>remove</button>
+        )}
+      </div>
     </>
   );
 };
