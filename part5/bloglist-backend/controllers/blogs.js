@@ -77,6 +77,11 @@ blogsRouter.put("/:id", async (request, response) => {
     return response.status(400).send({ error: "invalid blog id" });
   }
 
+  await Blog.populate(updatedBlog, {
+    path: "user",
+    select: "name username",
+  });
+
   response.json(updatedBlog);
 });
 
