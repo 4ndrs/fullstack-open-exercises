@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const CreateForm = ({ handleAddBlog, setHidden }) => {
+const CreateForm = ({ handleAddBlog }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
