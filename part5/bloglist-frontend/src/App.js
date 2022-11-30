@@ -43,7 +43,6 @@ const App = () => {
         setNotification={setNotification}
       />
       <LoggedUser setUser={setUser} userName={user.name} />
-      <h2>create new</h2>
       <CreateForm
         blogs={blogs}
         setBlogs={setBlogs}
