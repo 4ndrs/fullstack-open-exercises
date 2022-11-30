@@ -24,12 +24,15 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    const notification = { text: "", error: false };
+    const id = setInterval(() => setNotification(notification), 5000);
+
+    return () => clearInterval(id);
+  }, [notification]);
+
+  useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
   }, []);
-
-  const handleSetNotification = (notification) => {
-    setNotification(notification);
-  };
 
   const handleLogin = async (username, password) => {
     try {
@@ -99,10 +102,7 @@ const App = () => {
   if (!user) {
     return (
       <>
-        <Notification
-          notification={notification}
-          handleSetNotification={handleSetNotification}
-        />
+        <Notification notification={notification} />
 
         <LoginForm handleLogin={handleLogin} />
       </>
@@ -112,10 +112,7 @@ const App = () => {
   return (
     <>
       <h2>blogs</h2>
-      <Notification
-        notification={notification}
-        handleSetNotification={handleSetNotification}
-      />
+      <Notification notification={notification} />
 
       <LoggedUser handleLogout={handleLogout} userName={user.name} />
 
