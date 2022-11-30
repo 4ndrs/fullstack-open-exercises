@@ -124,17 +124,20 @@ describe("create blog post", () => {
       likes: 0,
     };
 
-    const blogId = (
+    const returnedBlog = (
       await api
         .post("/api/blogs")
         .set("Authorization", `Bearer ${token}`)
         .send(newBlog)
         .expect(201)
         .expect("Content-Type", /application\/json/)
-    ).body.id;
+    ).body;
 
-    const blog = await helper.getBlogById(blogId);
+    expect(returnedBlog.user.username).toBeDefined();
+    expect(returnedBlog.user.name).toBeDefined();
+    expect(returnedBlog.user.id).toBeDefined();
 
+    const blog = await helper.getBlogById(returnedBlog.id);
     expect(blog.title).toBe(newBlog.title);
     expect(blog.user.username).toBe(username);
   });
