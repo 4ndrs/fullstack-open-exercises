@@ -42,6 +42,11 @@ const App = () => {
     }
   };
 
+  const handleLogout = () => {
+    window.localStorage.removeItem("loggedBlogAppUser");
+    setUser(null);
+  };
+
   const handleAddBlog = async (blog) => {
     try {
       const savedBlog = await blogService.create(blog, user.token);
@@ -107,10 +112,13 @@ const App = () => {
         notification={notification}
         setNotification={setNotification}
       />
-      <LoggedUser setUser={setUser} userName={user.name} />
+
+      <LoggedUser handleLogout={handleLogout} userName={user.name} />
+
       <Toggler label="create new blog" ref={createFormTogglerRef}>
         <CreateForm handleAddBlog={handleAddBlog} />
       </Toggler>
+
       <Blogs
         blogs={blogs}
         handleUpdateBlog={handleUpdateBlog}
