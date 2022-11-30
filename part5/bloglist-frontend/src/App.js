@@ -27,6 +27,10 @@ const App = () => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
   }, []);
 
+  const handleSetNotification = (notification) => {
+    setNotification(notification);
+  };
+
   const handleLogin = async (username, password) => {
     try {
       const user = await loginService.login(username, password);
@@ -97,7 +101,7 @@ const App = () => {
       <>
         <Notification
           notification={notification}
-          setNotification={setNotification}
+          handleSetNotification={handleSetNotification}
         />
 
         <LoginForm handleLogin={handleLogin} />
@@ -110,7 +114,7 @@ const App = () => {
       <h2>blogs</h2>
       <Notification
         notification={notification}
-        setNotification={setNotification}
+        handleSetNotification={handleSetNotification}
       />
 
       <LoggedUser handleLogout={handleLogout} userName={user.name} />

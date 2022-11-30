@@ -2,15 +2,13 @@ import { useEffect } from "react";
 
 import "./Notification.css";
 
-const Notification = ({ notification, setNotification }) => {
+const Notification = ({ notification, handleSetNotification }) => {
   useEffect(() => {
-    const id = setInterval(
-      () => setNotification({ text: "", error: false }),
-      5000
-    );
+    const notification = { text: "", error: false };
+    const id = setInterval(() => handleSetNotification(notification), 5000);
 
     return () => clearInterval(id);
-  }, [notification, setNotification]);
+  }, [notification, handleSetNotification]);
 
   if (!notification.text) {
     return;
