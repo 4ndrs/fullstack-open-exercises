@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import Blogs from "./components/Blogs";
+import Toggler from "./components/Toggler";
 import LoginForm from "./components/LoginForm";
 import LoggedUser from "./components/LoggedUser";
 import CreateForm from "./components/CreateForm";
@@ -11,6 +12,8 @@ const App = () => {
   const [user, setUser] = useState(null);
   const [blogs, setBlogs] = useState([]);
   const [notification, setNotification] = useState({ text: "", error: false });
+
+  const formTogglerRef = useRef(null);
 
   useEffect(() => {
     const user = window.localStorage.getItem("loggedBlogAppUser");
@@ -43,12 +46,15 @@ const App = () => {
         setNotification={setNotification}
       />
       <LoggedUser setUser={setUser} userName={user.name} />
-      <CreateForm
-        blogs={blogs}
-        setBlogs={setBlogs}
-        token={user.token}
-        setNotification={setNotification}
-      />
+      <Toggler label="new note" ref={formTogglerRef}>
+        <CreateForm
+          blogs={blogs}
+          setBlogs={setBlogs}
+          token={user.token}
+          setNotification={setNotification}
+          setHidden={formTogglerRef.current}
+        />
+      </Toggler>
       <Blogs blogs={blogs} />
     </>
   );

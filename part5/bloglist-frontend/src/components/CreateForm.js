@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import blogService from "../services/blogs.js";
 
-const CreateForm = ({ blogs, setBlogs, token, setNotification }) => {
+const CreateForm = ({ blogs, setBlogs, token, setNotification, setHidden }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
@@ -21,6 +21,10 @@ const CreateForm = ({ blogs, setBlogs, token, setNotification }) => {
       setUrl("");
 
       setNotification({ text, error: false });
+
+      if (setHidden) {
+        setHidden(true);
+      }
     } catch (exception) {
       console.log(exception);
     }
