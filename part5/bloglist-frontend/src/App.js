@@ -7,6 +7,7 @@ import LoggedUser from "./components/LoggedUser";
 import CreateForm from "./components/CreateForm";
 import Notification from "./components/Notification";
 import blogService from "./services/blogs";
+import loginService from "./services/login";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -25,6 +26,21 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
   }, []);
+
+  const handleLogin = async (username, password) => {
+    try {
+      const user = await loginService.login(username, password);
+      window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
+      setUser(user);
+    } catch (exception) {
+      if (exception.response.status === 401) {
+        const text = exception.response.data.error;
+        setNotification({ text, error: true });
+      } else {
+        console.log(exception);
+      }
+    }
+  };
 
   const handleAddBlog = async (blog) => {
     try {
@@ -78,7 +94,8 @@ const App = () => {
           notification={notification}
           setNotification={setNotification}
         />
-        <LoginForm setUser={setUser} setNotification={setNotification} />
+
+        <LoginForm handleLogin={handleLogin} />
       </>
     );
   }

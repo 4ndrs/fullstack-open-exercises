@@ -1,30 +1,17 @@
 import { useState } from "react";
 
-import loginService from "../services/login";
-
-const LoginForm = ({ setUser, setNotification }) => {
+const LoginForm = ({ handleLogin }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
 
-    try {
-      const user = await loginService.login(username, password);
-      window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
-      setUser(user);
-    } catch (exception) {
-      if (exception.response.status === 401) {
-        const text = exception.response.data.error;
-        setNotification({ text, error: true });
-      } else {
-        console.log(exception);
-      }
-    }
+    handleLogin(username, password);
   };
 
   return (
-    <form onSubmit={handleLogin}>
+    <form onSubmit={handleSubmit}>
       <div>
         username
         <input
