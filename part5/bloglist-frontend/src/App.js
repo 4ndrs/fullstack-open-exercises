@@ -26,6 +26,22 @@ const App = () => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
   }, []);
 
+  const handleAddBlog = async (blog) => {
+    try {
+      const savedBlog = await blogService.create(blog, user.token);
+      const text = `${savedBlog.title} by ${savedBlog.author} added`;
+
+      setBlogs(blogs.concat(savedBlog));
+      setNotification({ text, error: false });
+
+      createFormTogglerRef.current.handleSetHidden(true);
+
+      return savedBlog;
+    } catch (exception) {
+      console.log(exception);
+    }
+  };
+
   const handleUpdateBlog = async (blog) => {
     try {
       const updatedBlog = await blogService.update(blog, blog.id);
@@ -76,13 +92,7 @@ const App = () => {
       />
       <LoggedUser setUser={setUser} userName={user.name} />
       <Toggler label="create new blog" ref={createFormTogglerRef}>
-        <CreateForm
-          blogs={blogs}
-          setBlogs={setBlogs}
-          token={user.token}
-          setNotification={setNotification}
-          setHidden={createFormTogglerRef.current}
-        />
+        <CreateForm handleAddBlog={handleAddBlog} />
       </Toggler>
       <Blogs
         blogs={blogs}

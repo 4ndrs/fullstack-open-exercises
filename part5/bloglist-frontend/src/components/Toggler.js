@@ -3,8 +3,14 @@ import { useState, forwardRef, useImperativeHandle } from "react";
 const Toggler = forwardRef((props, ref) => {
   const [hidden, setHidden] = useState(true);
 
+  const handleSetHidden = (bool) => {
+    setHidden(bool);
+  };
+
   useImperativeHandle(ref, () => {
-    return setHidden;
+    return {
+      handleSetHidden,
+    };
   });
 
   if (hidden) {

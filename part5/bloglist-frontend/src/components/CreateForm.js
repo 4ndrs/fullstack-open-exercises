@@ -1,8 +1,6 @@
 import { useState } from "react";
 
-import blogService from "../services/blogs.js";
-
-const CreateForm = ({ blogs, setBlogs, token, setNotification, setHidden }) => {
+const CreateForm = ({ handleAddBlog, setHidden }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
@@ -10,25 +8,15 @@ const CreateForm = ({ blogs, setBlogs, token, setNotification, setHidden }) => {
   const handleCreate = async (event) => {
     event.preventDefault();
     const newBlog = { title, author, url };
+    const results = await handleAddBlog(newBlog);
 
-    try {
-      const savedBlog = await blogService.create(newBlog, token);
-      const text = `${savedBlog.title} by ${savedBlog.author} added`;
-
-      setBlogs(blogs.concat(savedBlog));
+    if (results) {
       setTitle("");
       setAuthor("");
       setUrl("");
-
-      setNotification({ text, error: false });
-
-      if (setHidden) {
-        setHidden(true);
-      }
-    } catch (exception) {
-      console.log(exception);
     }
   };
+
   return (
     <>
       <h2>create new</h2>
