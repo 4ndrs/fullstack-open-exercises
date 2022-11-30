@@ -1,4 +1,5 @@
 import { useState, forwardRef, useImperativeHandle } from "react";
+import PropTypes from "prop-types";
 
 const Toggler = forwardRef((props, ref) => {
   const [hidden, setHidden] = useState(true);
@@ -24,5 +25,9 @@ const Toggler = forwardRef((props, ref) => {
     </>
   );
 });
+
+Toggler.propTypes = {
+  label: PropTypes.string.isRequired,
+};
 
 export default Toggler;
