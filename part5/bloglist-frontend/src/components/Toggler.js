@@ -30,4 +30,6 @@ Toggler.propTypes = {
   label: PropTypes.string.isRequired,
 };
 
+Toggler.displayName = "Toggler";
+
 export default Toggler;
