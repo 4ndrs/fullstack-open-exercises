@@ -253,18 +253,20 @@ describe("update blog post", () => {
   test("update likes by one", async () => {
     const blogToUpdate = (await helper.blogsInDb())[0];
 
-    await api
-      .put(`/api/blogs/${blogToUpdate.id}`)
-      .send({ ...blogToUpdate, likes: blogToUpdate.likes + 1 })
-      .expect(200)
-      .expect("Content-Type", /application\/json/);
+    const returnedBlog = (
+      await api
+        .put(`/api/blogs/${blogToUpdate.id}`)
+        .send({ ...blogToUpdate, likes: blogToUpdate.likes + 1 })
+        .expect(200)
+        .expect("Content-Type", /application\/json/)
+    ).body;
 
-    const blogsAtEnd = await helper.blogsInDb();
-    const updatedBlog = blogsAtEnd[0];
+    expect(returnedBlog.user.username).toBeDefined();
+    expect(returnedBlog.user.name).toBeDefined();
+    expect(returnedBlog.user.id).toBeDefined();
 
-    console.log(blogsAtEnd);
-
-    expect(updatedBlog.likes).toBe(blogToUpdate.likes + 1);
+    const updatedBlogInDb = (await helper.blogsInDb())[0];
+    expect(updatedBlogInDb.likes).toBe(blogToUpdate.likes + 1);
   });
 
   test("updating invalid blog id returns 400", async () => {
