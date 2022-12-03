@@ -6,8 +6,15 @@ describe("Blog app", () => {
       password: "913",
     };
 
+    const newUser2 = {
+      name: "Kamen Rider Faiz",
+      username: "faiz",
+      password: "555",
+    };
+
     cy.request("POST", "http://localhost:3003/api/testing/reset");
     cy.createUser(newUser);
+    cy.createUser(newUser2);
     cy.visit("http://localhost:3000");
   });
 
@@ -56,18 +63,41 @@ describe("Blog app", () => {
         .contains("view");
     });
 
-    it.only("A blog can be liked", () => {
-      const newBlog = {
-        title: "LADY PROSPERA",
-        author: "Miorine Rembran",
-        url: "https://g-witch.net/blog",
-      };
+    describe("when some blogs exist", () => {
+      beforeEach(() => {
+        const newBlog = {
+          title: "LADY PROSPERA",
+          author: "Miorine Rembran",
+          url: "https://g-witch.net/blog",
+        };
 
-      cy.createBlog(newBlog);
+        const newBlog2 = {
+          title: "Biribiri!",
+          author: "Fran",
+          url: "https://tenken-anime.com/blog",
+        };
 
-      cy.contains("LADY PROSPERA").find("button").contains("view").click();
-      cy.contains("likes 0").find("button").contains("like").click();
-      cy.contains("likes 1");
+        cy.createBlog(newBlog);
+        cy.createBlog(newBlog2);
+      });
+
+      it("A blog can be liked", () => {
+        cy.contains("LADY PROSPERA").find("button").contains("view").click();
+        cy.contains("likes 0").find("button").contains("like").click();
+        cy.contains("likes 1");
+      });
+
+      it("A blog can be deleted by its owner", () => {
+        cy.contains("Biribiri!").find("button").contains("view").click();
+        cy.contains("remove").click();
+        cy.get("html").should("not.contain", "Biribiri!");
+      });
+
+      it.only("A blog cannot be deleted by others", () => {
+        cy.login({ username: "faiz", password: "555" });
+        cy.contains("Biribiri!").find("button").contains("view").click();
+        cy.contains("Biribiri").should("not.contain", "remove");
+      });
     });
   });
 });
