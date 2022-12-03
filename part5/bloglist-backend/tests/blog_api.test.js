@@ -340,6 +340,18 @@ describe("create user", () => {
   });
 });
 
+describe("testing routes", () => {
+  test("post request to /reset removes all users and blogs", async () => {
+    await api.post("/api/testing/reset").expect(204);
+
+    const users = (await api.get("/api/users").expect(200)).body;
+    const blogs = (await api.get("/api/blogs").expect(200)).body;
+
+    expect(users).toHaveLength(0);
+    expect(blogs).toHaveLength(0);
+  });
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
