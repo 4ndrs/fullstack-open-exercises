@@ -93,10 +93,32 @@ describe("Blog app", () => {
         cy.get("html").should("not.contain", "Biribiri!");
       });
 
-      it.only("A blog cannot be deleted by others", () => {
+      it("A blog cannot be deleted by others", () => {
         cy.login({ username: "faiz", password: "555" });
         cy.contains("Biribiri!").find("button").contains("view").click();
         cy.contains("Biribiri").should("not.contain", "remove");
+      });
+
+      it("blogs are ordered according to likes", () => {
+        cy.get(".blog").first().contains("LADY PROSPERA");
+        cy.get(".blog").last().contains("Biribiri!");
+
+        cy.contains("Biribiri").find("button").contains("view").click();
+        cy.contains("Biribiri").find("button").contains("like").click();
+
+        cy.visit("http://localhost:3000");
+
+        cy.get(".blog").first().contains("Biribiri!");
+        cy.get(".blog").last().contains("LADY PROSPERA");
+
+        cy.contains("LADY PROSPERA").find("button").contains("view").click();
+        cy.contains("LADY PROSPERA").find("button").contains("like").click();
+        cy.contains("LADY PROSPERA").find("button").contains("like").click();
+
+        cy.visit("http://localhost:3000");
+
+        cy.get(".blog").first().contains("LADY PROSPERA");
+        cy.get(".blog").last().contains("Biribiri!");
       });
     });
   });
