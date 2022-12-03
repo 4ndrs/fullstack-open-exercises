@@ -44,7 +44,7 @@ describe("Blog app", () => {
       cy.login({ username: "kaixa", password: "913" });
     });
 
-    it.only("A blog can be created", () => {
+    it("A blog can be created", () => {
       cy.contains("create new blog").click();
       cy.contains("title").find("input").type("Blooming On the Mountaintop");
       cy.contains("author").find("input").type("Miyanaga Saki");
@@ -54,6 +54,20 @@ describe("Blog app", () => {
       cy.contains("Blooming On the Mountaintop Miyanaga Saki")
         .find("button")
         .contains("view");
+    });
+
+    it.only("A blog can be liked", () => {
+      const newBlog = {
+        title: "LADY PROSPERA",
+        author: "Miorine Rembran",
+        url: "https://g-witch.net/blog",
+      };
+
+      cy.createBlog(newBlog);
+
+      cy.contains("LADY PROSPERA").find("button").contains("view").click();
+      cy.contains("likes 0").find("button").contains("like").click();
+      cy.contains("likes 1");
     });
   });
 });
