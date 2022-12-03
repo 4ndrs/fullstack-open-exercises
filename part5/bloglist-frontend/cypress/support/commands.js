@@ -27,3 +27,12 @@
 Cypress.Commands.add("createUser", (newUser) => {
   cy.request("POST", "http://localhost:3003/api/users", newUser);
 });
+
+Cypress.Commands.add("login", (credentials) => {
+  cy.request("POST", "http://localhost:3003/api/login", credentials).then(
+    ({ body: user }) => {
+      window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
+      cy.visit("http://localhost:3000");
+    }
+  );
+});

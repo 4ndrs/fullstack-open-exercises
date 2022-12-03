@@ -38,4 +38,22 @@ describe("Blog app", () => {
         .and("have.css", "color", "rgb(255, 0, 0)");
     });
   });
+
+  describe("When logged in", () => {
+    beforeEach(() => {
+      cy.login({ username: "kaixa", password: "913" });
+    });
+
+    it.only("A blog can be created", () => {
+      cy.contains("create new blog").click();
+      cy.contains("title").find("input").type("Blooming On the Mountaintop");
+      cy.contains("author").find("input").type("Miyanaga Saki");
+      cy.contains("url").find("input").type("https://saki-mahjong.co.jp/blog");
+      cy.contains(/^create$/).click();
+
+      cy.contains("Blooming On the Mountaintop Miyanaga Saki")
+        .find("button")
+        .contains("view");
+    });
+  });
 });
