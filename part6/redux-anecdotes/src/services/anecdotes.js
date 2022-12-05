@@ -12,9 +12,15 @@ const add = async (anecdote) => {
   return response.data;
 };
 
+const update = async (anecdote) => {
+  const response = await axios.put(`${endpoint}/${anecdote.id}`, anecdote);
+  return response.data;
+};
+
 const anecdoteService = {
   getAll,
   add,
+  update,
 };
 
 export default anecdoteService;
