@@ -25,8 +25,8 @@ const useResource = (baseUrl) => {
   }, [baseUrl]);
 
   const create = async (resource) => {
-    const { data } = await axios.post(baseUrl, resource);
-    return data;
+    const { data: createdResource } = await axios.post(baseUrl, resource);
+    setResources([...resources, createdResource]);
   };
 
   const service = {
