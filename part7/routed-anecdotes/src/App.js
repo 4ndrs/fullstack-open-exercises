@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Routes, Route, Link, useMatch, useNavigate } from "react-router-dom";
 
 const Menu = () => {
@@ -131,6 +131,12 @@ const CreateNew = (props) => {
   );
 };
 
+const Notification = ({ text }) => {
+  if (text) {
+    return <div>{text}</div>;
+  }
+};
+
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
     {
@@ -156,9 +162,15 @@ const App = () => {
     ? anecdotes.find((anecdote) => anecdote.id === Number(match.params.id))
     : null;
 
+  useEffect(() => {
+    const id = setTimeout(() => setNotification(""), 5000);
+    return () => clearTimeout(id);
+  }, [notification]);
+
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000);
     setAnecdotes(anecdotes.concat(anecdote));
+    setNotification(`a new anecdote ${anecdote.content} created!`);
   };
 
   const anecdoteById = (id) => anecdotes.find((a) => a.id === id);
@@ -178,6 +190,7 @@ const App = () => {
     <>
       <h1>Software anecdotes</h1>
       <Menu />
+      <Notification text={notification} />
 
       <Routes>
         <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
