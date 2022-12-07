@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import Blogs from "./components/Blogs";
@@ -11,8 +11,15 @@ import blogService from "./services/blogs";
 import { setNotification } from "./reducers/notificationReducer";
 import { initializeLoggedUser } from "./reducers/loggedUserReducer";
 
+import {
+  initializeBlogs,
+  addBlog,
+  updateBlog,
+  removeBlog,
+} from "./reducers/blogsReducer";
+
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
+  const blogs = useSelector((state) => state.blogs);
 
   const dispatch = useDispatch();
   const loggedUser = useSelector((state) => state.loggedUser);
@@ -21,10 +28,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(initializeLoggedUser());
-  }, []);
-
-  useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
+    dispatch(initializeBlogs());
   }, []);
 
   const handleAddBlog = async (blog) => {
@@ -32,7 +36,7 @@ const App = () => {
       const savedBlog = await blogService.create(blog, loggedUser.token);
       const text = `${savedBlog.title} by ${savedBlog.author} added`;
 
-      setBlogs(blogs.concat(savedBlog));
+      dispatch(addBlog(savedBlog));
       dispatch(setNotification(text));
 
       createFormTogglerRef.current.handleSetHidden(true);
@@ -46,14 +50,7 @@ const App = () => {
   const handleUpdateBlog = async (blog) => {
     try {
       const updatedBlog = await blogService.update(blog, blog.id);
-      setBlogs(
-        blogs.map((blog) => {
-          if (blog.id !== updatedBlog.id) {
-            return blog;
-          }
-          return updatedBlog;
-        })
-      );
+      dispatch(updateBlog(updatedBlog));
     } catch (exception) {
       console.log(exception);
     }
@@ -65,7 +62,7 @@ const App = () => {
     if (window.confirm(msg)) {
       try {
         await blogService.remove(blog.id, loggedUser.token);
-        setBlogs(blogs.filter((b) => b.id !== blog.id));
+        dispatch(removeBlog(blog.id));
       } catch (exception) {
         console.log(exception);
       }

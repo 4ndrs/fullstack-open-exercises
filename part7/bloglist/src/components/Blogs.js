@@ -3,7 +3,7 @@ import Blog from "./Blog";
 const Blogs = ({ blogs, handleUpdateBlog, handleRemoveBlog }) => {
   return (
     <>
-      {blogs
+      {[...blogs]
         .sort((a, b) => b.likes - a.likes)
         .map((blog) => (
           <Blog
