@@ -1,8 +1,9 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 import "./Blog.css";
 
-const Blog = ({ blog, handleUpdateBlog, handleRemoveBlog, user }) => {
+const Blog = ({ blog, handleUpdateBlog, handleRemoveBlog }) => {
   const [showDetails, setShowDetails] = useState(false);
 
   return (
@@ -16,14 +17,19 @@ const Blog = ({ blog, handleUpdateBlog, handleRemoveBlog, user }) => {
           blog={blog}
           handleUpdateBlog={handleUpdateBlog}
           handleRemoveBlog={handleRemoveBlog}
-          user={user}
         />
       )}
     </div>
   );
 };
 
-const Details = ({ blog, handleUpdateBlog, handleRemoveBlog, user }) => {
+const Details = ({ blog, handleUpdateBlog, handleRemoveBlog }) => {
+  const user = useSelector((state) => {
+    return {
+      username: state.loggedUser.username,
+    };
+  });
+
   const handleLike = async () => {
     const likedBlog = {
       ...blog,

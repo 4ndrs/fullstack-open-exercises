@@ -1,7 +1,11 @@
-const LoggedUser = ({ handleLogout, userName }) => {
+import { useSelector } from "react-redux";
+
+const LoggedUser = ({ handleLogout }) => {
+  const name = useSelector((state) => state.loggedUser.name);
+
   return (
     <p>
-      {userName} logged in <button onClick={handleLogout}>logout</button>
+      {name} logged in <button onClick={handleLogout}>logout</button>
     </p>
   );
 };
