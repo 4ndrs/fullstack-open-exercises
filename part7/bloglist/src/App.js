@@ -8,9 +8,8 @@ import LoggedUser from "./components/LoggedUser";
 import CreateForm from "./components/CreateForm";
 import Notification from "./components/Notification";
 import blogService from "./services/blogs";
-import loginService from "./services/login";
 import { setNotification } from "./reducers/notificationReducer";
-import { setLoggedUser, resetLoggedUser } from "./reducers/loggedUserReducer";
+import { initializeLoggedUser } from "./reducers/loggedUserReducer";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -21,36 +20,12 @@ const App = () => {
   const createFormTogglerRef = useRef(null);
 
   useEffect(() => {
-    const user = window.localStorage.getItem("loggedBlogAppUser");
-    if (user) {
-      dispatch(setLoggedUser(JSON.parse(user)));
-    }
+    dispatch(initializeLoggedUser());
   }, []);
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
   }, []);
-
-  const handleLogin = async (username, password) => {
-    try {
-      const user = await loginService.login(username, password);
-      window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
-      dispatch(setLoggedUser(user));
-    } catch (exception) {
-      if (exception.response.status === 401) {
-        const text = exception.response.data.error;
-        const error = true;
-        dispatch(setNotification(text, error));
-      } else {
-        console.log(exception);
-      }
-    }
-  };
-
-  const handleLogout = () => {
-    window.localStorage.removeItem("loggedBlogAppUser");
-    dispatch(resetLoggedUser());
-  };
 
   const handleAddBlog = async (blog) => {
     try {
@@ -101,8 +76,7 @@ const App = () => {
     return (
       <>
         <Notification />
-
-        <LoginForm handleLogin={handleLogin} />
+        <LoginForm />
       </>
     );
   }
@@ -111,8 +85,7 @@ const App = () => {
     <>
       <h2>blogs</h2>
       <Notification />
-
-      <LoggedUser handleLogout={handleLogout} />
+      <LoggedUser />
 
       <Toggler label="create new blog" ref={createFormTogglerRef}>
         <CreateForm handleAddBlog={handleAddBlog} />

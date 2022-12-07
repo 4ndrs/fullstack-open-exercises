@@ -1,11 +1,14 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { resetLoggedUser } from "../reducers/loggedUserReducer";
 
-const LoggedUser = ({ handleLogout }) => {
+const LoggedUser = () => {
+  const dispatch = useDispatch();
   const name = useSelector((state) => state.loggedUser.name);
 
   return (
     <p>
-      {name} logged in <button onClick={handleLogout}>logout</button>
+      {name} logged in{" "}
+      <button onClick={() => dispatch(resetLoggedUser())}>logout</button>
     </p>
   );
 };

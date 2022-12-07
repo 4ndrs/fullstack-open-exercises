@@ -1,13 +1,29 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 
-const LoginForm = ({ handleLogin }) => {
+import { setLoggedUser } from "../reducers/loggedUserReducer";
+import { setNotification } from "../reducers/notificationReducer";
+
+const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (event) => {
+  const dispatch = useDispatch();
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    handleLogin(username, password);
+    try {
+      await dispatch(setLoggedUser(username, password));
+    } catch (exception) {
+      if (exception.response.status === 401) {
+        const text = exception.response.data.error;
+        const error = true;
+        dispatch(setNotification(text, error));
+      } else {
+        console.log(exception);
+      }
+    }
   };
 
   return (
