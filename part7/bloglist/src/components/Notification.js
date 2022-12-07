@@ -1,15 +1,17 @@
+import { useSelector } from "react-redux";
+
 import "./Notification.css";
 
-const Notification = ({ notification }) => {
-  if (!notification.text) {
-    return;
-  }
+const Notification = () => {
+  const notification = useSelector((state) => state.notification);
 
-  return (
-    <div className={"notification " + (notification.error && "error")}>
-      {notification.text}
-    </div>
-  );
+  if (notification.text) {
+    return (
+      <div className={"notification " + (notification.error && "error")}>
+        {notification.text}
+      </div>
+    );
+  }
 };
 
 export default Notification;

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
 
 import Blogs from "./components/Blogs";
 import Toggler from "./components/Toggler";
@@ -8,11 +9,13 @@ import CreateForm from "./components/CreateForm";
 import Notification from "./components/Notification";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
+import { setNotification } from "./reducers/notificationReducer";
 
 const App = () => {
   const [user, setUser] = useState(null);
   const [blogs, setBlogs] = useState([]);
-  const [notification, setNotification] = useState({ text: "", error: false });
+
+  const dispatch = useDispatch();
 
   const createFormTogglerRef = useRef(null);
 
@@ -22,13 +25,6 @@ const App = () => {
       setUser(JSON.parse(user));
     }
   }, []);
-
-  useEffect(() => {
-    const notification = { text: "", error: false };
-    const id = setInterval(() => setNotification(notification), 5000);
-
-    return () => clearInterval(id);
-  }, [notification]);
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -42,7 +38,8 @@ const App = () => {
     } catch (exception) {
       if (exception.response.status === 401) {
         const text = exception.response.data.error;
-        setNotification({ text, error: true });
+        const error = true;
+        dispatch(setNotification(text, error));
       } else {
         console.log(exception);
       }
@@ -60,7 +57,7 @@ const App = () => {
       const text = `${savedBlog.title} by ${savedBlog.author} added`;
 
       setBlogs(blogs.concat(savedBlog));
-      setNotification({ text, error: false });
+      dispatch(setNotification(text));
 
       createFormTogglerRef.current.handleSetHidden(true);
 
@@ -102,7 +99,7 @@ const App = () => {
   if (!user) {
     return (
       <>
-        <Notification notification={notification} />
+        <Notification />
 
         <LoginForm handleLogin={handleLogin} />
       </>
@@ -112,7 +109,7 @@ const App = () => {
   return (
     <>
       <h2>blogs</h2>
-      <Notification notification={notification} />
+      <Notification />
 
       <LoggedUser handleLogout={handleLogout} userName={user.name} />
 
