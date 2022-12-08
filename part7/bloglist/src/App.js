@@ -15,16 +15,12 @@ import { initializeUsers } from "./reducers/usersReducer";
 const App = () => {
   const dispatch = useDispatch();
   const loggedUser = useSelector((state) => state.loggedUser);
-  const users = useSelector((state) => state.users);
-  const match = useMatch("/users/:id");
 
   useEffect(() => {
     dispatch(initializeLoggedUser());
     dispatch(initializeBlogs());
     dispatch(initializeUsers());
   }, []);
-
-  const user = match ? users.find((user) => user.id === match.params.id) : null;
 
   return (
     <>
@@ -41,7 +37,7 @@ const App = () => {
         />
         <Route
           path="/users/:id"
-          element={loggedUser ? <UserContent user={user} /> : <LoginForm />}
+          element={loggedUser ? <UserContent /> : <LoginForm />}
         />
       </Routes>
     </>
@@ -101,7 +97,12 @@ const UsersContent = () => {
   );
 };
 
-const UserContent = ({ user }) => {
+const UserContent = () => {
+  const match = useMatch("/users/:id");
+  const user = useSelector((state) =>
+    state.users.find((user) => user.id === match.params.id)
+  );
+
   if (user) {
     return (
       <>
