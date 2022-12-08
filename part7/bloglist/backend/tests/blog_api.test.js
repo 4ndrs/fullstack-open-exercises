@@ -110,6 +110,11 @@ describe("when some blog posts exist", () => {
       expect(comment.author).toBe("Anonymous poster");
       expect(comment.message).toBe("SUPA SUGOI KEN");
       expect(comment.date).toBeDefined();
+
+      const updatedBlog = (await helper.blogsInDb())[1];
+
+      expect(updatedBlog.comments[0].message).toBe("SUPA SUGOI KEN");
+      expect(updatedBlog.comments[0].author).toBe("Anonymous poster");
     });
 
     test("comments to invalid ids return 400", async () => {
