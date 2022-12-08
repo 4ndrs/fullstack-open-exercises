@@ -1,6 +1,6 @@
 import Blog from "./Blog";
 
-const Blogs = ({ blogs, handleUpdateBlog, handleRemoveBlog }) => {
+const Blogs = ({ blogs, handleRemoveBlog }) => {
   return (
     <>
       {[...blogs]
@@ -10,7 +10,6 @@ const Blogs = ({ blogs, handleUpdateBlog, handleRemoveBlog }) => {
             key={blog.id}
             blog={blog}
             blogs={blogs}
-            handleUpdateBlog={handleUpdateBlog}
             handleRemoveBlog={handleRemoveBlog}
           />
         ))}

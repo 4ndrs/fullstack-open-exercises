@@ -10,11 +10,7 @@ import Notification from "./components/Notification";
 import blogService from "./services/blogs";
 import { initializeLoggedUser } from "./reducers/loggedUserReducer";
 
-import {
-  initializeBlogs,
-  updateBlog,
-  removeBlog,
-} from "./reducers/blogsReducer";
+import { initializeBlogs, removeBlog } from "./reducers/blogsReducer";
 
 const App = () => {
   const blogs = useSelector((state) => state.blogs);
@@ -28,15 +24,6 @@ const App = () => {
     dispatch(initializeLoggedUser());
     dispatch(initializeBlogs());
   }, []);
-
-  const handleUpdateBlog = async (blog) => {
-    try {
-      const updatedBlog = await blogService.update(blog, blog.id);
-      dispatch(updateBlog(updatedBlog));
-    } catch (exception) {
-      console.log(exception);
-    }
-  };
 
   const handleRemoveBlog = async (blog) => {
     const msg = `Remove blog ${blog.title} by ${blog.author}`;
@@ -70,11 +57,7 @@ const App = () => {
         <CreateForm togglerRef={createFormTogglerRef} />
       </Toggler>
 
-      <Blogs
-        blogs={blogs}
-        handleUpdateBlog={handleUpdateBlog}
-        handleRemoveBlog={handleRemoveBlog}
-      />
+      <Blogs blogs={blogs} handleRemoveBlog={handleRemoveBlog} />
     </>
   );
 };
