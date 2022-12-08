@@ -7,7 +7,7 @@ const LoggedUser = () => {
 
   return (
     <>
-      <p>{name} logged in</p>
+      {name} logged in{" "}
       <button onClick={() => dispatch(resetLoggedUser())}>logout</button>
     </>
   );
