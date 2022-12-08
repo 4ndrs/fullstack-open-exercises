@@ -99,22 +99,18 @@ describe("when some blog posts exist", () => {
     test("can add anonymous comments", async () => {
       const blog = (await helper.blogsInDb())[1];
 
-      const comment = (
-        await api
-          .post(`/api/blogs/${blog.id}/comments`)
-          .send({ message: "SUPA SUGOI KEN" })
-          .expect(201)
-          .expect("Content-Type", /application\/json/)
-      ).body;
-
-      expect(comment.author).toBe("Anonymous poster");
-      expect(comment.message).toBe("SUPA SUGOI KEN");
-      expect(comment.date).toBeDefined();
+      await api
+        .post(`/api/blogs/${blog.id}/comments`)
+        .send({ message: "SUPA SUGOI KEN" })
+        .expect(201)
+        .expect("Content-Type", /application\/json/);
 
       const updatedBlog = (await helper.blogsInDb())[1];
 
       expect(updatedBlog.comments[0].message).toBe("SUPA SUGOI KEN");
       expect(updatedBlog.comments[0].author).toBe("Anonymous poster");
+      expect(updatedBlog.comments[0].date).toBeDefined();
+      expect(updatedBlog.comments[0].id).toBeDefined();
     });
 
     test("comments to invalid ids return 400", async () => {
