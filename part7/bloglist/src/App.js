@@ -1,12 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Routes, Route, Link, useMatch } from "react-router-dom";
 
 import Blogs from "./components/Blogs";
-import Toggler from "./components/Toggler";
 import LoginForm from "./components/LoginForm";
 import LoggedUser from "./components/LoggedUser";
-import CreateForm from "./components/CreateForm";
 import Notification from "./components/Notification";
 import { initializeLoggedUser } from "./reducers/loggedUserReducer";
 import { initializeBlogs } from "./reducers/blogsReducer";
@@ -27,10 +25,7 @@ const App = () => {
       <Header loggedUser={loggedUser} />
 
       <Routes>
-        <Route
-          path="/"
-          element={loggedUser ? <BlogsContent /> : <LoginForm />}
-        />
+        <Route path="/" element={loggedUser ? <Blogs /> : <LoginForm />} />
         <Route
           path="/users"
           element={loggedUser ? <UsersContent /> : <LoginForm />}
@@ -50,19 +45,6 @@ const Header = ({ loggedUser }) => {
       <h2>Blog App</h2>
       <Notification />
       {loggedUser && <LoggedUser />}
-    </>
-  );
-};
-
-const BlogsContent = () => {
-  const createFormTogglerRef = useRef(null);
-
-  return (
-    <>
-      <Toggler label="create new blog" ref={createFormTogglerRef}>
-        <CreateForm togglerRef={createFormTogglerRef} />
-      </Toggler>
-      <Blogs />
     </>
   );
 };
