@@ -1,8 +1,9 @@
 import { useEffect } from "react";
+import { Routes, Route, useMatch } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Routes, Route, Link, useMatch } from "react-router-dom";
 
 import Blogs from "./components/Blogs";
+import Users from "./components/Users";
 import LoginForm from "./components/LoginForm";
 import LoggedUser from "./components/LoggedUser";
 import Notification from "./components/Notification";
@@ -26,10 +27,7 @@ const App = () => {
 
       <Routes>
         <Route path="/" element={loggedUser ? <Blogs /> : <LoginForm />} />
-        <Route
-          path="/users"
-          element={loggedUser ? <UsersContent /> : <LoginForm />}
-        />
+        <Route path="/users" element={loggedUser ? <Users /> : <LoginForm />} />
         <Route
           path="/users/:id"
           element={loggedUser ? <UserContent /> : <LoginForm />}
@@ -45,36 +43,6 @@ const Header = ({ loggedUser }) => {
       <h2>Blog App</h2>
       <Notification />
       {loggedUser && <LoggedUser />}
-    </>
-  );
-};
-
-const UsersContent = () => {
-  const users = useSelector((state) => state.users);
-
-  return (
-    <>
-      <h2>Users</h2>
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            <th>
-              <strong>blogs created</strong>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user) => (
-            <tr key={user.id}>
-              <td>
-                <Link to={`/users/${user.id}`}>{user.name}</Link>
-              </td>
-              <td>{user.blogs.length}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
     </>
   );
 };
