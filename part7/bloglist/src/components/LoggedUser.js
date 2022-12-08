@@ -6,10 +6,10 @@ const LoggedUser = () => {
   const name = useSelector((state) => state.loggedUser.name);
 
   return (
-    <p>
-      {name} logged in{" "}
+    <>
+      <p>{name} logged in</p>
       <button onClick={() => dispatch(resetLoggedUser())}>logout</button>
-    </p>
+    </>
   );
 };
 
