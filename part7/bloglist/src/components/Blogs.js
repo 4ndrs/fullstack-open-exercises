@@ -7,18 +7,19 @@ import Toggler from "./Toggler";
 import CreateForm from "./CreateForm";
 
 const Blogs = () => {
-  const blogs = useSelector((state) => state.blogs);
+  const blogs = useSelector((state) =>
+    [...state.blogs].sort((a, b) => b.likes - a.likes)
+  );
+
   return (
     <>
-      {[...blogs]
-        .sort((a, b) => b.likes - a.likes)
-        .map((blog) => (
-          <div key={blog.id} className="blog">
-            <Link to={`/blogs/${blog.id}`}>
-              {blog.title} {blog.author}{" "}
-            </Link>
-          </div>
-        ))}
+      {blogs.map((blog) => (
+        <div key={blog.id} className="blog">
+          <Link to={`/blogs/${blog.id}`}>
+            {blog.title} {blog.author}{" "}
+          </Link>
+        </div>
+      ))}
     </>
   );
 };
