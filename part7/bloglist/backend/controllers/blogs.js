@@ -106,8 +106,8 @@ blogsRouter.post("/:id/comments", async (request, response) => {
   };
 
   blog.comments.push(comment);
-  await blog.save();
+  const savedBlog = await blog.save();
 
-  return response.status(201).send(comment);
+  return response.status(201).json(savedBlog);
 });
 module.exports = blogsRouter;
