@@ -5,9 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import User from "./components/User";
 import Blogs from "./components/Blogs";
 import Users from "./components/Users";
+import Header from "./components/Header";
 import LoginForm from "./components/LoginForm";
-import LoggedUser from "./components/LoggedUser";
-import Notification from "./components/Notification";
 import { initializeLoggedUser } from "./reducers/loggedUserReducer";
 import { initializeBlogs } from "./reducers/blogsReducer";
 import { initializeUsers } from "./reducers/usersReducer";
@@ -24,7 +23,7 @@ const App = () => {
 
   return (
     <>
-      <Header loggedUser={loggedUser} />
+      <Header />
 
       <Routes>
         <Route path="/" element={loggedUser ? <Blogs /> : <LoginForm />} />
@@ -34,16 +33,6 @@ const App = () => {
           element={loggedUser ? <User /> : <LoginForm />}
         />
       </Routes>
-    </>
-  );
-};
-
-const Header = ({ loggedUser }) => {
-  return (
-    <>
-      <h2>Blog App</h2>
-      <Notification />
-      {loggedUser && <LoggedUser />}
     </>
   );
 };
