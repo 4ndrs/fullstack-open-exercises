@@ -66,9 +66,23 @@ const Blog = () => {
             <button onClick={handleRemove}>remove</button>
           )}
         </div>
+        <h2>comments</h2>
+        <Comments comments={blog.comments} />
       </>
     );
   }
+};
+
+const Comments = ({ comments }) => {
+  return (
+    <>
+      <ul>
+        {comments.map((comment) => (
+          <li key={comment.id}>{comment.message}</li>
+        ))}
+      </ul>
+    </>
+  );
 };
 
 export default Blog;
