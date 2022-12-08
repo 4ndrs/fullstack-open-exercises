@@ -85,4 +85,29 @@ blogsRouter.put("/:id", async (request, response) => {
   response.json(updatedBlog);
 });
 
+blogsRouter.post("/:id/comments", async (request, response) => {
+  const { message } = request.body;
+  const blog = await Blog.findById(request.params.id);
+
+  if (!message || message.length < 3 || message.length > 2000) {
+    return response
+      .status(400)
+      .send({ error: "message min/max length is 3/2000 characters" });
+  }
+
+  if (!blog) {
+    return response.status(400).send({ error: "invalid blog id" });
+  }
+
+  const comment = {
+    message,
+    author: "Anonymous poster",
+    date: new Date(),
+  };
+
+  blog.comments.push(comment);
+  await blog.save();
+
+  return response.status(201).send(comment);
+});
 module.exports = blogsRouter;
