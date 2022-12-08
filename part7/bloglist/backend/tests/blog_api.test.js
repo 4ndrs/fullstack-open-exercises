@@ -94,6 +94,39 @@ describe("when some blog posts exist", () => {
 
     expect(blog.id).toBeDefined();
   });
+
+  describe("commenting", () => {
+    test("can add anonymous comments", async () => {
+      const blog = (await helper.blogsInDb())[1];
+
+      const comment = (
+        await api
+          .post(`/api/blogs/${blog.id}/comments`)
+          .send({ message: "SUPA SUGOI KEN" })
+          .expect(201)
+          .expect("Content-Type", /application\/json/)
+      ).body;
+
+      expect(comment.author).toBe("Anonymous poster");
+      expect(comment.message).toBe("SUPA SUGOI KEN");
+      expect(comment.date).toBeDefined();
+    });
+
+    test("comments to invalid ids return 400", async () => {
+      await api
+        .post("/api/blogs/invalidID2345/comments")
+        .send({ message: "DESIRE GRAND PRIX" })
+        .expect(400);
+    });
+
+    test("comments with no message return 400", async () => {
+      const blog = (await helper.blogsInDb())[0];
+      await api
+        .post(`/api/blogs/${blog.id}/comments`)
+        .send({ message: "" })
+        .expect(400);
+    });
+  });
 });
 
 describe("create blog post", () => {
