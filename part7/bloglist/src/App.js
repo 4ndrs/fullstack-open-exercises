@@ -11,8 +11,6 @@ import { initializeLoggedUser } from "./reducers/loggedUserReducer";
 import { initializeBlogs } from "./reducers/blogsReducer";
 
 const App = () => {
-  const blogs = useSelector((state) => state.blogs);
-
   const dispatch = useDispatch();
   const loggedUser = useSelector((state) => state.loggedUser);
 
@@ -37,12 +35,10 @@ const App = () => {
       <h2>blogs</h2>
       <Notification />
       <LoggedUser />
-
       <Toggler label="create new blog" ref={createFormTogglerRef}>
         <CreateForm togglerRef={createFormTogglerRef} />
       </Toggler>
-
-      <Blogs blogs={blogs} />
+      <Blogs />
     </>
   );
 };
