@@ -7,10 +7,8 @@ import LoginForm from "./components/LoginForm";
 import LoggedUser from "./components/LoggedUser";
 import CreateForm from "./components/CreateForm";
 import Notification from "./components/Notification";
-import blogService from "./services/blogs";
 import { initializeLoggedUser } from "./reducers/loggedUserReducer";
-
-import { initializeBlogs, removeBlog } from "./reducers/blogsReducer";
+import { initializeBlogs } from "./reducers/blogsReducer";
 
 const App = () => {
   const blogs = useSelector((state) => state.blogs);
@@ -24,19 +22,6 @@ const App = () => {
     dispatch(initializeLoggedUser());
     dispatch(initializeBlogs());
   }, []);
-
-  const handleRemoveBlog = async (blog) => {
-    const msg = `Remove blog ${blog.title} by ${blog.author}`;
-
-    if (window.confirm(msg)) {
-      try {
-        await blogService.remove(blog.id, loggedUser.token);
-        dispatch(removeBlog(blog.id));
-      } catch (exception) {
-        console.log(exception);
-      }
-    }
-  };
 
   if (!loggedUser) {
     return (
@@ -57,7 +42,7 @@ const App = () => {
         <CreateForm togglerRef={createFormTogglerRef} />
       </Toggler>
 
-      <Blogs blogs={blogs} handleRemoveBlog={handleRemoveBlog} />
+      <Blogs blogs={blogs} />
     </>
   );
 };

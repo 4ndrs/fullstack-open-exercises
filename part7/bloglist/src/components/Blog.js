@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { updateBlog } from "../reducers/blogsReducer";
+import { updateBlog, removeBlog } from "../reducers/blogsReducer";
 
 import "./Blog.css";
 
-const Blog = ({ blog, handleRemoveBlog }) => {
+const Blog = ({ blog }) => {
   const [showDetails, setShowDetails] = useState(false);
 
   return (
@@ -14,14 +14,12 @@ const Blog = ({ blog, handleRemoveBlog }) => {
       <button onClick={() => setShowDetails(!showDetails)}>
         {showDetails ? "hide" : "view"}
       </button>
-      {showDetails && (
-        <Details blog={blog} handleRemoveBlog={handleRemoveBlog} />
-      )}
+      {showDetails && <Details blog={blog} />}
     </div>
   );
 };
 
-const Details = ({ blog, handleRemoveBlog }) => {
+const Details = ({ blog }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => {
     return {
@@ -43,7 +41,15 @@ const Details = ({ blog, handleRemoveBlog }) => {
   };
 
   const handleRemove = async () => {
-    await handleRemoveBlog(blog);
+    const msg = `Remove blog ${blog.title} by ${blog.author}`;
+
+    if (window.confirm(msg)) {
+      try {
+        await dispatch(removeBlog(blog.id));
+      } catch (exception) {
+        console.log(exception);
+      }
+    }
   };
 
   return (

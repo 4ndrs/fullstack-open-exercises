@@ -56,6 +56,12 @@ export const updateBlog = (blog) => {
   };
 };
 
-export const { remove: removeBlog } = blogSlice.actions;
+export const removeBlog = (id) => {
+  return async (dispatch, getState) => {
+    const token = getState().loggedUser.token;
+    await blogService.remove(id, token);
+    dispatch(blogSlice.actions.remove(id));
+  };
+};
 
 export default blogSlice.reducer;

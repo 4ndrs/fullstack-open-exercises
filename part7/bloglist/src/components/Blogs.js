@@ -1,17 +1,12 @@
 import Blog from "./Blog";
 
-const Blogs = ({ blogs, handleRemoveBlog }) => {
+const Blogs = ({ blogs }) => {
   return (
     <>
       {[...blogs]
         .sort((a, b) => b.likes - a.likes)
         .map((blog) => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            blogs={blogs}
-            handleRemoveBlog={handleRemoveBlog}
-          />
+          <Blog key={blog.id} blog={blog} />
         ))}
     </>
   );
