@@ -52,7 +52,9 @@ const Blog = () => {
 
     return (
       <>
-        <h2>{blog.title}</h2>
+        <h2>
+          {blog.title} {blog.author}
+        </h2>
         <a href={blog.url}>{blog.url}</a>
         <div>
           {blog.likes} likes
