@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import User from "./components/User";
+import Blog from "./components/Blog";
 import Blogs from "./components/Blogs";
 import Users from "./components/Users";
 import Header from "./components/Header";
@@ -31,6 +32,10 @@ const App = () => {
         <Route
           path="/users/:id"
           element={loggedUser ? <User /> : <LoginForm />}
+        />
+        <Route
+          path="/blogs/:id"
+          element={loggedUser ? <Blog /> : <LoginForm />}
         />
       </Routes>
     </>
