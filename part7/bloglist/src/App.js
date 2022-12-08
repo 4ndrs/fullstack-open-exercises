@@ -8,12 +8,10 @@ import LoggedUser from "./components/LoggedUser";
 import CreateForm from "./components/CreateForm";
 import Notification from "./components/Notification";
 import blogService from "./services/blogs";
-import { setNotification } from "./reducers/notificationReducer";
 import { initializeLoggedUser } from "./reducers/loggedUserReducer";
 
 import {
   initializeBlogs,
-  addBlog,
   updateBlog,
   removeBlog,
 } from "./reducers/blogsReducer";
@@ -30,22 +28,6 @@ const App = () => {
     dispatch(initializeLoggedUser());
     dispatch(initializeBlogs());
   }, []);
-
-  const handleAddBlog = async (blog) => {
-    try {
-      const savedBlog = await blogService.create(blog, loggedUser.token);
-      const text = `${savedBlog.title} by ${savedBlog.author} added`;
-
-      dispatch(addBlog(savedBlog));
-      dispatch(setNotification(text));
-
-      createFormTogglerRef.current.handleSetHidden(true);
-
-      return savedBlog;
-    } catch (exception) {
-      console.log(exception);
-    }
-  };
 
   const handleUpdateBlog = async (blog) => {
     try {
@@ -85,7 +67,7 @@ const App = () => {
       <LoggedUser />
 
       <Toggler label="create new blog" ref={createFormTogglerRef}>
-        <CreateForm handleAddBlog={handleAddBlog} />
+        <CreateForm togglerRef={createFormTogglerRef} />
       </Toggler>
 
       <Blogs

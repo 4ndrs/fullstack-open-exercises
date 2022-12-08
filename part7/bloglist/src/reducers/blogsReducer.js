@@ -8,13 +8,15 @@ const blogSlice = createSlice({
   initialState,
   reducers: {
     set: (state, action) => {
-      return action.payload;
+      const blogs = action.payload;
+      return blogs;
     },
     reset: () => {
       return initialState;
     },
     add: (state, action) => {
-      return [...state, action.payload];
+      const newBlog = action.payload;
+      return [...state, newBlog];
     },
     update: (state, action) => {
       const updatedBlog = action.payload;
@@ -39,10 +41,14 @@ export const initializeBlogs = () => {
   };
 };
 
-export const {
-  add: addBlog,
-  update: updateBlog,
-  remove: removeBlog,
-} = blogSlice.actions;
+export const addBlog = (blog) => {
+  return async (dispatch, getState) => {
+    const token = getState().loggedUser.token;
+    const createdBlog = await blogService.create(blog, token);
+    dispatch(blogSlice.actions.add(createdBlog));
+  };
+};
+
+export const { update: updateBlog, remove: removeBlog } = blogSlice.actions;
 
 export default blogSlice.reducer;

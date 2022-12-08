@@ -4,13 +4,10 @@ import PropTypes from "prop-types";
 const Toggler = forwardRef((props, ref) => {
   const [hidden, setHidden] = useState(true);
 
-  const handleSetHidden = (bool) => {
-    setHidden(bool);
-  };
-
   useImperativeHandle(ref, () => {
     return {
-      handleSetHidden,
+      hidePlease: () => setHidden(true),
+      unhidePlease: () => setHidden(false),
     };
   });
 

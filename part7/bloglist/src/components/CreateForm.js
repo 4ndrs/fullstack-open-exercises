@@ -1,19 +1,28 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 
-const CreateForm = ({ handleAddBlog }) => {
+import { addBlog } from "../reducers/blogsReducer";
+import { setNotification } from "../reducers/notificationReducer";
+
+const CreateForm = ({ togglerRef }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
 
+  const dispatch = useDispatch();
+
   const handleCreate = async (event) => {
     event.preventDefault();
     const newBlog = { title, author, url };
-    const results = await handleAddBlog(newBlog);
 
-    if (results) {
-      setTitle("");
-      setAuthor("");
-      setUrl("");
+    try {
+      await dispatch(addBlog(newBlog));
+      const text = `${newBlog.title} by ${newBlog.author} added`;
+
+      dispatch(setNotification(text));
+      togglerRef.current.hidePlease();
+    } catch (exception) {
+      console.log(exception);
     }
   };
 
