@@ -107,6 +107,10 @@ blogsRouter.post("/:id/comments", async (request, response) => {
 
   blog.comments.push(comment);
   const savedBlog = await blog.save();
+  await Blog.populate(savedBlog, {
+    path: "user",
+    select: "name username",
+  });
 
   return response.status(201).json(savedBlog);
 });
