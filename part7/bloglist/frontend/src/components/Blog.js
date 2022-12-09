@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { useMatch, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
-import { updateBlog, removeBlog } from "../reducers/blogsReducer";
+import { setNotification } from "../reducers/notificationReducer";
+import { updateBlog, removeBlog, addComment } from "../reducers/blogsReducer";
 
 const Blog = () => {
   const dispatch = useDispatch();
@@ -67,15 +69,42 @@ const Blog = () => {
           )}
         </div>
         <h2>comments</h2>
-        <Comments comments={blog.comments} />
+        <Comments blog={blog} />
       </>
     );
   }
 };
 
-const Comments = ({ comments }) => {
+const Comments = ({ blog }) => {
+  const [message, setMessage] = useState("");
+
+  const dispatch = useDispatch();
+  const comments = blog.comments;
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      await dispatch(addComment(blog.id, message));
+
+      const text = "Successfully posted comment";
+      dispatch(setNotification(text));
+      setMessage("");
+    } catch (exception) {
+      if (exception.response.status === 400) {
+        const text = exception.response.data.error;
+        const error = true;
+        dispatch(setNotification(text, error));
+      }
+    }
+  };
+
   return (
     <>
+      <form onSubmit={handleSubmit}>
+        <input value={message} onChange={(e) => setMessage(e.target.value)} />
+        <button type="submit">add comment</button>
+      </form>
       <ul>
         {comments.map((comment) => (
           <li key={comment.id}>{comment.message}</li>
