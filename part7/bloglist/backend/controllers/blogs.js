@@ -62,6 +62,12 @@ blogsRouter.delete("/:id", async (request, response) => {
   }
 
   await Blog.findByIdAndDelete(blog._id);
+
+  // Delete the blog from the user's list
+  const index = request.user.blogs.indexOf(blog._id);
+  request.user.blogs.splice(index, 1);
+  request.user.save();
+
   response.status(204).end();
 });
 
