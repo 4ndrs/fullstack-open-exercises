@@ -1,5 +1,25 @@
+import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { Fragment, useState } from "react";
+
+import {
+  Typography,
+  AppBar,
+  Toolbar,
+  Box,
+  Button,
+  useScrollTrigger,
+  Slide,
+  Fade,
+  Fab,
+  IconButton,
+  Menu,
+  MenuItem,
+} from "@mui/material";
+
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import MenuIcon from "@mui/icons-material/Menu";
 
 import LoggedUser from "./LoggedUser";
 import Notification from "./Notification";
@@ -10,45 +30,147 @@ const Header = () => {
   return (
     <>
       <Notification />
-      {loggedUser && <Navigation />}
-      <h2>Blog App</h2>
+      {loggedUser ? (
+        <Navigation />
+      ) : (
+        <Typography align="center" variant="h3" mt={2}>
+          Blog App
+        </Typography>
+      )}
     </>
   );
 };
 
 const Navigation = () => {
-  const divStyle = {
-    backgroundColor: "lightgrey",
+  const [anchorElNav, setAnchorElNav] = useState(null);
+
+  const handleOpenNavMenu = (event) => {
+    setAnchorElNav(event.currentTarget);
   };
 
-  const ulStyle = {
-    listStyle: "none",
-    margin: 0,
-    paddingTop: 4,
-    paddingBottom: 4,
-    paddingLeft: 0,
-    paddingRight: 0,
-  };
-
-  const liStyle = {
-    display: "inline",
-    margin: 4,
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
   };
 
   return (
-    <div style={divStyle}>
-      <ul style={ulStyle}>
-        <li style={liStyle}>
-          <Link to="/">blogs</Link>
-        </li>
-        <li style={liStyle}>
-          <Link to="/users">users</Link>
-        </li>
-        <li style={liStyle}>
-          <LoggedUser />
-        </li>
-      </ul>
-    </div>
+    <Fragment>
+      <HideOnScroll>
+        <AppBar>
+          <Toolbar>
+            <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+              <IconButton
+                size="large"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleOpenNavMenu}
+                color="inherit"
+              >
+                <MenuIcon />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorElNav}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "left",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+                open={Boolean(anchorElNav)}
+                onClose={handleCloseNavMenu}
+                sx={{
+                  display: { xs: "block", md: "none" },
+                }}
+              >
+                <MenuItem onClick={handleCloseNavMenu}>
+                  <Button
+                    component={Link}
+                    to="/"
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    blogs
+                  </Button>
+                  <Button
+                    component={Link}
+                    to="/users"
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    users
+                  </Button>
+                </MenuItem>
+              </Menu>
+            </Box>
+            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+              <Button
+                component={Link}
+                to="/"
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                blogs
+              </Button>
+              <Button
+                component={Link}
+                to="/users"
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                users
+              </Button>
+            </Box>
+            <Box>
+              <LoggedUser />
+            </Box>
+          </Toolbar>
+        </AppBar>
+      </HideOnScroll>
+      <Toolbar id="back-to-top-anchor" />
+      <ScrollTop />
+    </Fragment>
+  );
+};
+
+const HideOnScroll = ({ children }) => {
+  const trigger = useScrollTrigger();
+
+  return (
+    <Slide appear={false} direction="down" in={!trigger}>
+      {children}
+    </Slide>
+  );
+};
+
+HideOnScroll.propTypes = {
+  children: PropTypes.element.isRequired,
+};
+
+const ScrollTop = () => {
+  const trigger = useScrollTrigger();
+
+  const handleClick = (event) => {
+    const anchor = (event.target.ownerDocument || document).querySelector(
+      "#back-to-top-anchor"
+    );
+
+    if (anchor) {
+      anchor.scrollIntoView({
+        block: "center",
+      });
+    }
+  };
+
+  return (
+    <Fade in={trigger}>
+      <Fab
+        size="medium"
+        aria-label="scroll back to top"
+        onClick={handleClick}
+        sx={{ position: "fixed", bottom: 16, right: 16 }}
+      >
+        <KeyboardArrowUpIcon />
+      </Fab>
+    </Fade>
   );
 };
 
