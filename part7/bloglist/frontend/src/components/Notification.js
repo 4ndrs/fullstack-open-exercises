@@ -1,17 +1,20 @@
 import { useSelector } from "react-redux";
-
-import "./Notification.css";
+import { Snackbar, Alert } from "@mui/material";
 
 const Notification = () => {
   const notification = useSelector((state) => state.notification);
 
-  if (notification.text) {
-    return (
-      <div className={"notification " + (notification.error && "error")}>
-        {notification.text}
-      </div>
-    );
-  }
+  const severity = notification.error ? "error" : "success";
+  const open = Boolean(notification.text);
+
+  return (
+    <Snackbar
+      open={open}
+      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+    >
+      <Alert severity={severity}>{notification.text}</Alert>
+    </Snackbar>
+  );
 };
 
 export default Notification;
