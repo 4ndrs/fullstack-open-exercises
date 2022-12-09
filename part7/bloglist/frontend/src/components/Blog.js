@@ -39,6 +39,7 @@ const Blog = () => {
     if (window.confirm(msg)) {
       try {
         await dispatch(removeBlog(blog.id));
+        dispatch(setNotification("Blog deleted"));
         navigate("/");
       } catch (exception) {
         console.log(exception);
