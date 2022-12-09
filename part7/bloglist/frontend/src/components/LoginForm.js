@@ -15,6 +15,7 @@ const LoginForm = () => {
 
     try {
       await dispatch(setLoggedUser(username, password));
+      dispatch(setNotification("Successfully logged in"));
     } catch (exception) {
       if (exception.response.status === 401) {
         const text = exception.response.data.error;
