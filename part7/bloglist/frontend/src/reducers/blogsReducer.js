@@ -1,5 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
+
 import blogService from "../services/blogs";
+import { addBlogToUser, removeBlogFromUser } from "./usersReducer";
 
 const initialState = [];
 
@@ -46,6 +48,8 @@ export const addBlog = (blog) => {
     const token = getState().loggedUser.token;
     const createdBlog = await blogService.create(blog, token);
     dispatch(blogSlice.actions.add(createdBlog));
+
+    dispatch(addBlogToUser(createdBlog));
   };
 };
 
@@ -56,11 +60,15 @@ export const updateBlog = (blog) => {
   };
 };
 
-export const removeBlog = (id) => {
+export const removeBlog = (blog) => {
   return async (dispatch, getState) => {
     const token = getState().loggedUser.token;
-    await blogService.remove(id, token);
-    dispatch(blogSlice.actions.remove(id));
+    await blogService.remove(blog.id, token);
+    dispatch(blogSlice.actions.remove(blog.id));
+
+    if (blog.user) {
+      dispatch(removeBlogFromUser(blog));
+    }
   };
 };
 
