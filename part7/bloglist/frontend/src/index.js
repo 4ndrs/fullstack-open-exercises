@@ -6,10 +6,26 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import { store } from "./store";
 
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
+
+import { CssBaseline } from "@mui/material";
+import { ThemeProvider } from "@mui/material/styles";
+import { Container } from "@mui/material";
+
+import theme from "./theme";
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <Provider store={store}>
-      <App />
+      <ThemeProvider theme={theme}>
+        <Container component="main" maxWidth="lg">
+          <CssBaseline />
+          <App />
+        </Container>
+      </ThemeProvider>
     </Provider>
   </BrowserRouter>
 );
