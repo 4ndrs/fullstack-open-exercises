@@ -1,4 +1,5 @@
 import { useState, forwardRef, useImperativeHandle } from "react";
+import { Button } from "@mui/material";
 import PropTypes from "prop-types";
 
 const Toggler = forwardRef((props, ref) => {
@@ -12,13 +13,19 @@ const Toggler = forwardRef((props, ref) => {
   });
 
   if (hidden) {
-    return <button onClick={() => setHidden(false)}>{props.label}</button>;
+    return (
+      <Button variant="contained" onClick={() => setHidden(false)}>
+        {props.label}
+      </Button>
+    );
   }
 
   return (
     <>
       {props.children}
-      <button onClick={() => setHidden(true)}>cancel</button>
+      <Button variant="outlined" onClick={() => setHidden(true)}>
+        cancel
+      </Button>
     </>
   );
 });
