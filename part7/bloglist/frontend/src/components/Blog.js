@@ -2,6 +2,26 @@ import { useState } from "react";
 import { useMatch, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
+import {
+  List,
+  ListItem,
+  Divider,
+  ListItemText,
+  ListItemAvatar,
+  Avatar,
+  Typography,
+  Container,
+  Box,
+  IconButton,
+  Tooltip,
+  Button,
+  TextField,
+} from "@mui/material";
+
+import DeleteIcon from "@mui/icons-material/Delete";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import AddCommentIcon from "@mui/icons-material/AddComment";
+
 import { setNotification } from "../reducers/notificationReducer";
 import { updateBlog, removeBlog, addComment } from "../reducers/blogsReducer";
 
@@ -39,7 +59,7 @@ const Blog = () => {
     if (window.confirm(msg)) {
       try {
         await dispatch(removeBlog(blog));
-        dispatch(setNotification("Blog deleted"));
+        dispatch(setNotification(`${blog.title} by ${blog.author} removed`));
         navigate("/");
       } catch (exception) {
         console.log(exception);
@@ -54,24 +74,70 @@ const Blog = () => {
     };
 
     return (
-      <>
-        <h2>
+      <Container
+        maxWidth="xl"
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+          mt: 5,
+        }}
+      >
+        <Typography variant="h3" component="div" sx={{ mb: 1 }}>
           {blog.title} {blog.author}
-        </h2>
-        <a href={blog.url}>{blog.url}</a>
-        <div>
-          {blog.likes} likes
-          <button onClick={handleLike}>like</button>
-        </div>
-        <div>{blogOwner.name && `added by ${blogOwner.name}`}</div>
-        <div>
-          {user.username === blogOwner.username && (
-            <button onClick={handleRemove}>remove</button>
-          )}
-        </div>
-        <h2>comments</h2>
-        <Comments blog={blog} />
-      </>
+        </Typography>
+
+        <Typography color="text.secondary" component="a" href={blog.url}>
+          {blog.url}
+        </Typography>
+
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            gap: "2px",
+            alignItems: "center",
+          }}
+        >
+          <Typography>{blog.likes} likes</Typography>
+          <Tooltip title="Like">
+            <IconButton aria-label="like" onClick={handleLike}>
+              <ThumbUpIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        </Box>
+
+        <Typography>
+          {blogOwner.name && `Added by ${blogOwner.name}`}
+        </Typography>
+
+        {user.username === blogOwner.username && (
+          <Box sx={{ mt: 1, mb: 1 }}>
+            <Button
+              size="small"
+              variant="outlined"
+              startIcon={<DeleteIcon />}
+              onClick={handleRemove}
+            >
+              remove
+            </Button>
+          </Box>
+        )}
+
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            mt: 5,
+            alignSelf: "center",
+          }}
+        >
+          <Typography textAlign="center" variant="h4" sx={{ mb: 4 }}>
+            Comments
+          </Typography>
+          <Comments blog={blog} />
+        </Box>
+      </Container>
     );
   }
 };
@@ -102,15 +168,61 @@ const Comments = ({ blog }) => {
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
-        <input value={message} onChange={(e) => setMessage(e.target.value)} />
-        <button type="submit">add comment</button>
-      </form>
-      <ul>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "10px",
+          alignItems: "center",
+        }}
+        component="form"
+        onSubmit={handleSubmit}
+      >
+        <TextField
+          size="small"
+          value={message}
+          multiline
+          fullWidth
+          onChange={(e) => setMessage(e.target.value)}
+        />
+        <Button
+          size="small"
+          variant="contained"
+          startIcon={<AddCommentIcon />}
+          type="submit"
+        >
+          add comment
+        </Button>
+      </Box>
+      <List>
         {comments.map((comment) => (
-          <li key={comment.id}>{comment.message}</li>
+          <div key={comment.id}>
+            <ListItem>
+              <ListItemAvatar>
+                <Avatar
+                  alt="Anonymous poster"
+                  src="/static/images/avatar/anon.jpg"
+                />
+              </ListItemAvatar>
+              <ListItemText
+                primary={`${comment.author} ${comment.date}`}
+                secondary={
+                  <>
+                    <Typography
+                      sx={{ display: "inline" }}
+                      component="span"
+                      variant="body2"
+                      color="text.primary"
+                    ></Typography>
+                    {comment.message}
+                  </>
+                }
+              ></ListItemText>
+            </ListItem>
+            <Divider variant="inset" component="li" />
+          </div>
         ))}
-      </ul>
+      </List>
     </>
   );
 };
