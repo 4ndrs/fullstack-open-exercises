@@ -1,5 +1,6 @@
-import { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { CircularProgress, Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 
 import { initializeUsers } from "./reducers/usersReducer";
@@ -16,12 +17,32 @@ import LoginForm from "./components/LoginForm";
 const App = () => {
   const dispatch = useDispatch();
   const loggedUser = useSelector((state) => state.loggedUser);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     dispatch(initializeLoggedUser());
     dispatch(initializeBlogs());
     dispatch(initializeUsers());
+
+    setLoading(false);
+    return () => setLoading(true);
   }, []);
+
+  if (loading) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "100vw",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <>
