@@ -1,8 +1,16 @@
 import { Link } from "react-router-dom";
-import { useRef } from "react";
 import { useSelector } from "react-redux";
+import { useRef, Fragment } from "react";
 
-import "./Blog.css";
+import {
+  Container,
+  List,
+  ListItemButton,
+  Divider,
+  Box,
+  Typography,
+} from "@mui/material";
+
 import Toggler from "./Toggler";
 import CreateForm from "./CreateForm";
 
@@ -12,15 +20,18 @@ const Blogs = () => {
   );
 
   return (
-    <>
+    <List sx={{ mt: 2, mb: 2 }}>
       {blogs.map((blog) => (
-        <div key={blog.id} className="blog">
-          <Link to={`/blogs/${blog.id}`}>
-            {blog.title} {blog.author}{" "}
-          </Link>
-        </div>
+        <Fragment key={blog.id}>
+          <ListItemButton component={Link} to={`/blogs/${blog.id}`}>
+            <Typography variant="h5" sx={{ p: 1 }}>
+              {`${blog.title} ${blog.author}`}
+            </Typography>
+          </ListItemButton>
+          <Divider />
+        </Fragment>
       ))}
-    </>
+    </List>
   );
 };
 
@@ -28,12 +39,23 @@ const BlogsContent = () => {
   const createFormTogglerRef = useRef(null);
 
   return (
-    <div>
-      <Toggler label="create new blog" ref={createFormTogglerRef}>
-        <CreateForm togglerRef={createFormTogglerRef} />
-      </Toggler>
+    <Container maxWidth="xl">
+      <Container maxWidth="xs">
+        <Box
+          sx={{
+            marginTop: 4,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Toggler label="create new blog" ref={createFormTogglerRef}>
+            <CreateForm togglerRef={createFormTogglerRef} />
+          </Toggler>
+        </Box>
+      </Container>
       <Blogs />
-    </div>
+    </Container>
   );
 };
 
