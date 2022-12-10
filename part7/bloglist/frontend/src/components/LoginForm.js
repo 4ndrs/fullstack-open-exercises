@@ -39,6 +39,7 @@ const LoginForm = () => {
       setLoading(false);
       if (exception.response.status === 401) {
         const text = exception.response.data.error;
+        const error = true;
         dispatch(setNotification(text, error));
       } else {
         console.log(exception);
@@ -57,12 +58,12 @@ const LoginForm = () => {
         }}
       >
         <Avatar sx={{ height: 200, width: 200 }} />
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
           <TextField
             required
             error={error}
             margin="normal"
-            label="username"
+            label="Username"
             name="username"
             fullWidth
           />
@@ -70,7 +71,7 @@ const LoginForm = () => {
             required
             error={error}
             margin="normal"
-            label="password"
+            label="Password"
             name="password"
             type={showPassword ? "text" : "password"}
             InputProps={{
