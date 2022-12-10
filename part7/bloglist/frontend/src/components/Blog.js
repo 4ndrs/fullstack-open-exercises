@@ -10,7 +10,6 @@ import {
   ListItemAvatar,
   Avatar,
   Typography,
-  Container,
   Box,
   IconButton,
   Tooltip,
@@ -74,8 +73,7 @@ const Blog = () => {
     };
 
     return (
-      <Container
-        maxWidth="xl"
+      <Box
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -137,7 +135,7 @@ const Blog = () => {
           </Typography>
           <Comments blog={blog} />
         </Box>
-      </Container>
+      </Box>
     );
   }
 };

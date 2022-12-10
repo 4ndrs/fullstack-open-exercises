@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { CircularProgress, Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
+import { CircularProgress, Box, Container } from "@mui/material";
 
 import { initializeUsers } from "./reducers/usersReducer";
 import { initializeBlogs } from "./reducers/blogsReducer";
@@ -48,18 +48,23 @@ const App = () => {
     <>
       <Header />
 
-      <Routes>
-        <Route path="/" element={loggedUser ? <Blogs /> : <LoginForm />} />
-        <Route path="/users" element={loggedUser ? <Users /> : <LoginForm />} />
-        <Route
-          path="/users/:id"
-          element={loggedUser ? <User /> : <LoginForm />}
-        />
-        <Route
-          path="/blogs/:id"
-          element={loggedUser ? <Blog /> : <LoginForm />}
-        />
-      </Routes>
+      <Container maxWidth="xl" component="main">
+        <Routes>
+          <Route path="/" element={loggedUser ? <Blogs /> : <LoginForm />} />
+          <Route
+            path="/users"
+            element={loggedUser ? <Users /> : <LoginForm />}
+          />
+          <Route
+            path="/users/:id"
+            element={loggedUser ? <User /> : <LoginForm />}
+          />
+          <Route
+            path="/blogs/:id"
+            element={loggedUser ? <Blog /> : <LoginForm />}
+          />
+        </Routes>
+      </Container>
     </>
   );
 };

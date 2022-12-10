@@ -39,7 +39,7 @@ const BlogsContent = () => {
   const createFormTogglerRef = useRef(null);
 
   return (
-    <Container maxWidth="xl">
+    <>
       <Container maxWidth="xs">
         <Box
           sx={{
@@ -55,7 +55,7 @@ const BlogsContent = () => {
         </Box>
       </Container>
       <Blogs />
-    </Container>
+    </>
   );
 };
 
