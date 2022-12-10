@@ -13,7 +13,6 @@ import "@fontsource/roboto/700.css";
 
 import { CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
-import { Container } from "@mui/material";
 
 import theme from "./theme";
 
@@ -21,10 +20,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <Provider store={store}>
       <ThemeProvider theme={theme}>
-        <Container component="main" maxWidth="lg">
-          <CssBaseline />
-          <App />
-        </Container>
+        <CssBaseline />
+        <App />
       </ThemeProvider>
     </Provider>
   </BrowserRouter>
