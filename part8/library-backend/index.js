@@ -80,7 +80,15 @@ const resolvers = {
     allAuthors: async () => Author.find({}),
   },
 
-  Author: {},
+  Author: {
+    bookCount: async (root) =>
+      (
+        await Book.find({}).populate({
+          path: "author",
+          match: { name: root.name },
+        })
+      ).filter((book) => book.author).length,
+  },
   Mutation: {
     addBook: async (root, args) => {
       let author = await Author.findOne({ name: args.author });
