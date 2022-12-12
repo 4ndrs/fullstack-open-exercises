@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
 
+import BirthForm from "./BirthForm";
 import { ALL_AUTHORS } from "../queries.js";
 
 const Authors = (props) => {
@@ -34,6 +35,7 @@ const Authors = (props) => {
           ))}
         </tbody>
       </table>
+      <BirthForm />
     </div>
   );
 };
