@@ -70,6 +70,13 @@ const resolvers = {
 
       return book;
     },
+
+    editAuthor: async (root, args) =>
+      Author.findOneAndUpdate(
+        { name: args.name },
+        { born: args.setBornTo },
+        { new: true }
+      ),
   },
 };
 
