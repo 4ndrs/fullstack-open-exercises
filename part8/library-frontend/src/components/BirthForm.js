@@ -1,9 +1,17 @@
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 
-import { EDIT_BIRTHYEAR } from "../queries.js";
+import { EDIT_BIRTHYEAR, ALL_AUTHORS } from "../queries.js";
 
 const BirthForm = () => {
+  const result = useQuery(ALL_AUTHORS);
+
   const [editBirthyear] = useMutation(EDIT_BIRTHYEAR);
+
+  if (result.loading) {
+    return <div>loading...</div>;
+  }
+
+  const authors = result.data.allAuthors;
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -23,7 +31,15 @@ const BirthForm = () => {
       <form onSubmit={handleSubmit}>
         <div>
           name
-          <input name="name" />
+          <select name="name">
+            {authors.map((author) => {
+              return (
+                <option key={author.id} value={author.name}>
+                  {author.name}
+                </option>
+              );
+            })}
+          </select>
         </div>
         <div>
           born
