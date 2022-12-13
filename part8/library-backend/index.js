@@ -160,7 +160,7 @@ const resolvers = {
     },
 
     createUser: async (root, args) => {
-      const user = new User({ username: args.username });
+      const user = new User({ ...args });
 
       try {
         await user.save();
