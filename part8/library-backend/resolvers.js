@@ -1,10 +1,13 @@
 const { UserInputError, AuthenticationError } = require("apollo-server");
+const { PubSub } = require("graphql-subscriptions");
 const jwt = require("jsonwebtoken");
 
 const User = require("./models/user");
 const Book = require("./models/book");
 const Author = require("./models/author");
 const config = require("./utils/config");
+
+const pubsub = new PubSub();
 
 const resolvers = {
   Query: {
@@ -82,6 +85,8 @@ const resolvers = {
 
       await book.populate("author");
 
+      pubsub.publish("BOOK_ADDED", { bookAdded: book });
+
       return book;
     },
 
@@ -124,6 +129,12 @@ const resolvers = {
       };
 
       return { value: jwt.sign(userForToken, config.JWT_SECRET) };
+    },
+  },
+
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator("BOOK_ADDED"),
     },
   },
 };
