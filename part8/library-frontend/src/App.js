@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useApolloClient } from "@apollo/client";
+import { useApolloClient, useSubscription } from "@apollo/client";
 
 import Authors from "./components/Authors";
 import Books from "./components/Books";
@@ -7,14 +7,23 @@ import NewBook from "./components/NewBook";
 import LoginForm from "./components/LoginForm";
 import Recommend from "./components/Recommend";
 
+import { BOOK_ADDED } from "./queries";
+
 const App = () => {
   const [page, setPage] = useState("authors");
   const [token, setToken] = useState(null);
+  const [newBooksAdded, setNewBooksAdded] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("loggedLibraryAppUser");
     setToken(token);
   }, []);
+
+  useSubscription(BOOK_ADDED, {
+    onData: () => {
+      setNewBooksAdded(true);
+    },
+  });
 
   const client = useApolloClient();
 
@@ -49,8 +58,19 @@ const App = () => {
       <NewBook show={page === "add"} />
       <Recommend show={page === "recommend"} />
       <LoginForm show={page === "login"} handleLogin={handleLogin} />
+
+      {newBooksAdded && <MessageBox setNewBooksAdded={setNewBooksAdded} />}
     </div>
   );
 };
+
+const MessageBox = ({ setNewBooksAdded }) => (
+  <dialog open>
+    <p>New book added to the server</p>
+    <button type="button" onClick={() => setNewBooksAdded(false)}>
+      OK
+    </button>
+  </dialog>
+);
 
 export default App;
