@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 
 const {
   ApolloServer,
-  gql,
   UserInputError,
   AuthenticationError,
 } = require("apollo-server");
@@ -12,61 +11,13 @@ const User = require("./models/user");
 const Book = require("./models/book");
 const Author = require("./models/author");
 const config = require("./utils/config");
+const typeDefs = require("./schema.js");
 
 console.log("Connecting to ", config.MONGODB_URI);
 mongoose.connect(config.MONGODB_URI).catch((error) => {
   console.log("error connecting to MongoDB", error.message);
   process.exit(1);
 });
-
-const typeDefs = gql`
-  type Book {
-    id: ID!
-    title: String!
-    published: Int!
-    author: Author!
-    genres: [String!]!
-  }
-
-  type Author {
-    id: ID!
-    name: String!
-    born: Int
-    bookCount: Int
-  }
-
-  type User {
-    username: String!
-    favouriteGenre: String!
-    id: ID!
-  }
-
-  type Token {
-    value: String!
-  }
-
-  type Query {
-    bookCount: Int!
-    authorCount: Int!
-    allBooks(author: String, genre: String): [Book!]!
-    allAuthors: [Author!]!
-    me: User
-  }
-
-  type Mutation {
-    addBook(
-      title: String!
-      published: Int!
-      author: String!
-      genres: [String!]!
-    ): Book!
-
-    editAuthor(name: String!, setBornTo: Int!): Author
-
-    createUser(username: String!, favouriteGenre: String!): User
-    login(username: String!, password: String!): Token
-  }
-`;
 
 const resolvers = {
   Query: {
