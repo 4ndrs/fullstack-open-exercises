@@ -8,6 +8,7 @@ const config = require("./utils/config");
 const typeDefs = require("./schema");
 const resolvers = require("./resolvers");
 
+mongoose.set("strictQuery", true);
 console.log("Connecting to ", config.MONGODB_URI);
 mongoose.connect(config.MONGODB_URI).catch((error) => {
   console.log("error connecting to MongoDB", error.message);
