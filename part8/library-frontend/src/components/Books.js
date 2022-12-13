@@ -1,11 +1,36 @@
-import { useQuery } from "@apollo/client";
-import { useState } from "react";
+import { useLazyQuery } from "@apollo/client";
+import { useState, useEffect } from "react";
 
 import { ALL_BOOKS } from "../queries.js";
 
 const Books = (props) => {
   const [genreFilter, setGenreFilter] = useState("all genres");
-  const result = useQuery(ALL_BOOKS);
+  const [genres, setGenres] = useState(new Set());
+  const [books, setBooks] = useState([]);
+
+  const [getBooks, result] = useLazyQuery(ALL_BOOKS);
+
+  useEffect(() => {
+    if (genreFilter !== "all genres") {
+      getBooks({ variables: { genre: genreFilter } });
+    } else {
+      getBooks();
+    }
+  }, [genreFilter]); // eslint-disable-line
+
+  useEffect(() => {
+    if (result.data?.allBooks) {
+      const books = result.data.allBooks;
+      setBooks(books);
+      setGenres((currentGenres) => {
+        const genres = books.reduce(
+          (genres, current) => genres.concat(current.genres),
+          []
+        );
+        return new Set([...currentGenres, ...genres]);
+      });
+    }
+  }, [result.data]);
 
   if (!props.show) {
     return null;
@@ -14,16 +39,6 @@ const Books = (props) => {
   if (result.loading) {
     return <div>loading...</div>;
   }
-
-  const books = result.data.allBooks;
-  const genres = new Set(
-    books.reduce((genres, current) => genres.concat(current.genres), [])
-  );
-
-  const booksToView =
-    genreFilter === "all genres"
-      ? books
-      : books.filter((book) => book.genres.includes(genreFilter));
 
   return (
     <div>
@@ -36,7 +51,7 @@ const Books = (props) => {
             <th>author</th>
             <th>published</th>
           </tr>
-          {booksToView.map((a) => (
+          {books.map((a) => (
             <tr key={a.title}>
               <td>{a.title}</td>
               <td>{a.author.name}</td>
