@@ -25,6 +25,14 @@ export const ALL_BOOKS = gql`
   }
 `;
 
+export const FAVOURITE_GENRE = gql`
+  query {
+    me {
+      favouriteGenre
+    }
+  }
+`;
+
 export const ADD_BOOK = gql`
   mutation addBook(
     $title: String!
