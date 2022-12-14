@@ -25,7 +25,7 @@ const calculateExercises = (
   } else {
     rating = 3;
     success = true;
-    ratingDescription = "target reached 🎉";
+    ratingDescription = "on a roll 🚀, keep it up!";
   }
 
   return {
