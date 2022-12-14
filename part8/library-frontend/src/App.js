@@ -66,14 +66,13 @@ const App = () => {
         )}
         {token && <button onClick={handleLogout}>logout</button>}
       </div>
+      {newBooksAdded && <MessageBox setNewBooksAdded={setNewBooksAdded} />}
 
       <Authors show={page === "authors"} />
       <Books show={page === "books"} />
       <NewBook show={page === "add"} />
       <Recommend show={page === "recommend"} />
       <LoginForm show={page === "login"} handleLogin={handleLogin} />
-
-      {newBooksAdded && <MessageBox setNewBooksAdded={setNewBooksAdded} />}
     </div>
   );
 };
