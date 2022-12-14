@@ -12,7 +12,7 @@ const Books = (props) => {
 
   useEffect(() => {
     if (genreFilter !== "all genres") {
-      getBooks({ variables: { genre: genreFilter } });
+      getBooks({ variables: { genre: genreFilter }, fetchPolicy: "no-cache" });
     } else {
       getBooks();
     }

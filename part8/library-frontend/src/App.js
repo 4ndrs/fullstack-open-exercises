@@ -7,12 +7,19 @@ import NewBook from "./components/NewBook";
 import LoginForm from "./components/LoginForm";
 import Recommend from "./components/Recommend";
 
-import { BOOK_ADDED } from "./queries";
+import { BOOK_ADDED, ALL_BOOKS, ALL_AUTHORS } from "./queries";
+
+export const uniqueById = (items) => {
+  let ids = new Set();
+  return items.filter((item) => (ids.has(item.id) ? false : ids.add(item.id)));
+};
 
 const App = () => {
   const [page, setPage] = useState("authors");
   const [token, setToken] = useState(null);
   const [newBooksAdded, setNewBooksAdded] = useState(false);
+
+  const client = useApolloClient();
 
   useEffect(() => {
     const token = localStorage.getItem("loggedLibraryAppUser");
@@ -20,12 +27,19 @@ const App = () => {
   }, []);
 
   useSubscription(BOOK_ADDED, {
-    onData: () => {
+    onData: ({ data }) => {
       setNewBooksAdded(true);
+      const bookAdded = data.data.bookAdded;
+
+      client.cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
+        return { allBooks: uniqueById(allBooks.concat(bookAdded)) };
+      });
+
+      client.cache.updateQuery({ query: ALL_AUTHORS }, ({ allAuthors }) => {
+        return { allAuthors: uniqueById(allAuthors.concat(bookAdded.author)) };
+      });
     },
   });
-
-  const client = useApolloClient();
 
   const handleLogin = (token) => {
     setToken(token);
