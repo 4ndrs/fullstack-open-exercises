@@ -1,3 +1,21 @@
+const main2 = () => {
+  const arguments = process.argv.slice(2);
+
+  if (arguments.length < 3) {
+    console.error("Not enough arguments");
+    process.exit(1);
+  }
+
+  const [target, ...dailyHours] = arguments.map((argument) => Number(argument));
+
+  if ([target, ...dailyHours].includes(NaN)) {
+    console.error("Invalid numbers provided");
+    process.exit(1);
+  }
+
+  console.log(calculateExercises(dailyHours, target));
+};
+
 const calculateExercises = (
   dailyExerciseHours: Array<number>,
   target: number
@@ -68,4 +86,4 @@ const calculateAverage = (numbers: Array<number>): number => {
   return total / numbers.length;
 };
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
+main2();
