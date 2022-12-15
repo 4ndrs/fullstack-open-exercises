@@ -1,3 +1,21 @@
+const main = () => {
+  const arguments = process.argv.slice(2);
+
+  if (arguments.length < 2) {
+    console.error("Not enough arguments");
+    process.exit(1);
+  }
+
+  const [height, weight] = arguments.map((argument) => Number(argument));
+
+  if ([height, weight].includes(NaN)) {
+    console.error("Invalid numbers provided");
+    process.exit(1);
+  }
+
+  console.log(calculateBmi(height, weight));
+};
+
 type Category =
   | "Normal (healthy weight)"
   | "Overweight (At risk)"
@@ -25,4 +43,4 @@ const calculateBmi = (
   return "Obese (Unhealthy weight)";
 };
 
-console.log(calculateBmi(180, 74));
+main();
