@@ -1,12 +1,12 @@
 const main = () => {
-  const arguments = process.argv.slice(2);
+  const args = process.argv.slice(2);
 
-  if (arguments.length < 2) {
-    console.error("Not enough arguments");
+  if (args.length < 2) {
+    console.error("Not enough args");
     process.exit(1);
   }
 
-  const [height, weight] = arguments.map((argument) => Number(argument));
+  const [height, weight] = args.map((arg) => Number(arg));
 
   if ([height, weight].includes(NaN)) {
     console.error("Invalid numbers provided");
