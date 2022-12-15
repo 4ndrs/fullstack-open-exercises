@@ -16,10 +16,7 @@ const main = () => {
   console.log(calculateBmi(height, weight));
 };
 
-type Category =
-  | "Normal (healthy weight)"
-  | "Overweight (At risk)"
-  | "Obese (Unhealthy weight)";
+type Category = "Normal (healthy weight)" | "Overweight" | "Obese";
 
 const calculateBmi = (
   heightInCentimeters: number,
@@ -37,10 +34,10 @@ const calculateBmi = (
   }
 
   if (bmi < 30) {
-    return "Overweight (At risk)";
+    return "Overweight";
   }
 
-  return "Obese (Unhealthy weight)";
+  return "Obese";
 };
 
 main();
