@@ -19,8 +19,14 @@ app.get("/bmi", (request, response) => {
   try {
     const bmi = calculateBmi(height, weight);
     return response.send({ weight, height, bmi });
-  } catch (error) {
-    return response.status(400).send({ error: error.message });
+  } catch (error: unknown) {
+    let errorMessage = "malformatted parameters";
+
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+
+    return response.status(400).send({ error: errorMessage });
   }
 });
 
