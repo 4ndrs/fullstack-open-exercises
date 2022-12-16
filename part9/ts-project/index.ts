@@ -12,7 +12,7 @@ app.get("/bmi", (request, response) => {
   const height = Number(request.query.height);
   const weight = Number(request.query.weight);
 
-  if ([height, weight].includes(NaN)) {
+  if ([height, weight].includes(NaN) || [height, weight].includes(Infinity)) {
     return response.status(400).send({ error: "malformatted parameters" });
   }
 
