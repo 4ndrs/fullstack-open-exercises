@@ -57,12 +57,14 @@ interface Result {
 }
 
 const calculateAverage = (numbers: Array<number>): number => {
+  if (numbers.length < 1) {
+    throw new Error("An empty array was provided");
+  }
+
   const total = numbers.reduce((total, current) => total + current);
 
   if (isNaN(total) || !isFinite(total)) {
     throw new Error("Invalid numbers found inside the array provided");
-  } else if (numbers.length < 1) {
-    throw new Error("An empty array was provided");
   }
 
   return total / numbers.length;
