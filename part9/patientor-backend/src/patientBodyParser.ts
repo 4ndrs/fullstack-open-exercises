@@ -1,4 +1,4 @@
-import { NewPatient } from "./types";
+import { Gender, NewPatient } from "./types";
 
 export interface BodyFields {
   name: unknown;
@@ -27,7 +27,7 @@ export const parseRequestBody = ({
     throw new Error(`missing or invalid ssn field: ${ssn}`);
   }
 
-  if (!gender || !isString(gender)) {
+  if (!gender || !isString(gender) || !isGender(gender)) {
     throw new Error(`missing or invalid gender field: ${gender}`);
   }
 
@@ -46,4 +46,8 @@ const isString = (value: unknown): value is string => {
 
 const isDate = (value: string): boolean => {
   return Boolean(Date.parse(value));
+};
+
+const isGender = (value: string): value is Gender => {
+  return Object.values(Gender).includes(value as Gender);
 };

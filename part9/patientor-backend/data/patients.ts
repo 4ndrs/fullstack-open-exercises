@@ -1,6 +1,6 @@
-import { Patient } from "../src/types";
+import { Gender, Patient } from "../src/types";
 
-const patients: Array<Patient> = [
+const data = [
   {
     id: "d2773336-f723-11e9-8f0b-362b9e155667",
     name: "John McClane",
@@ -42,5 +42,10 @@ const patients: Array<Patient> = [
     occupation: "Digital evangelist",
   },
 ];
+
+const patients: Array<Patient> = data.map((patient) => ({
+  ...patient,
+  gender: patient.gender as Gender,
+}));
 
 export default patients;
