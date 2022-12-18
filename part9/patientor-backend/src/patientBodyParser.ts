@@ -19,7 +19,7 @@ export const parseRequestBody = ({
     throw new Error(`missing or invalid name field: ${name}`);
   }
 
-  if (!dateOfBirth || !isString(dateOfBirth)) {
+  if (!dateOfBirth || !isString(dateOfBirth) || !isDate(dateOfBirth)) {
     throw new Error(`missing or invalid dateOfBirth field: ${dateOfBirth}`);
   }
 
@@ -42,4 +42,8 @@ export const parseRequestBody = ({
 
 const isString = (value: unknown): value is string => {
   return typeof value === "string";
+};
+
+const isDate = (value: string): boolean => {
+  return Boolean(Date.parse(value));
 };
