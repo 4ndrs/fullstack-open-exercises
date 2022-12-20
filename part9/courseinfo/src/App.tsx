@@ -22,7 +22,16 @@ interface CourseSubmissionPart extends CoursePartDescription {
   exerciseSubmissionLink: string;
 }
 
-type CoursePart = CourseNormalPart | CourseProjectPart | CourseSubmissionPart;
+interface CourseSpecialPart extends CoursePartDescription {
+  type: "special";
+  requirements: Array<string>;
+}
+
+type CoursePart =
+  | CourseNormalPart
+  | CourseProjectPart
+  | CourseSubmissionPart
+  | CourseSpecialPart;
 
 const App = () => {
   const courseName = "Half Stack application development";
@@ -52,6 +61,13 @@ const App = () => {
       description: "Confusing description",
       exerciseSubmissionLink: "http://fake-exercise-submit.made-up-url.dev",
       type: "submission",
+    },
+    {
+      name: "Backend development",
+      exerciseCount: 21,
+      description: "Typing the backend",
+      requirements: ["nodejs", "jest"],
+      type: "special",
     },
   ];
 
@@ -104,6 +120,14 @@ const Part = ({ part }: { part: CoursePart }) => {
         <div>
           <em>{part.description}</em>
           <div>submit to {part.exerciseSubmissionLink}</div>
+        </div>
+      );
+      break;
+    case "special":
+      additionalContent = (
+        <div>
+          <em>{part.description}</em>
+          <div>required skills: {part.requirements.join(", ")}</div>
         </div>
       );
       break;
