@@ -8,6 +8,15 @@ router.get("/", (_request, response) => {
   response.send(patientService.getNonSensitiveEntries());
 });
 
+router.get("/:id", (request, response) => {
+  try {
+    const patient = patientService.findPatient(request.params.id);
+    response.send(patient);
+  } catch (_error) {
+    response.sendStatus(404);
+  }
+});
+
 router.post("/", (request, response) => {
   try {
     const newPatient = parseRequestBody(request.body as BodyFields);
