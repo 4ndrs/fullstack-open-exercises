@@ -20,7 +20,18 @@ const addPatient = (newPatient: NewPatient): Patient => {
   return patient;
 };
 
+const findPatient = (id: string): Patient => {
+  const patient = patients.find((patient) => patient.id === id);
+
+  if (!patient) {
+    throw new Error(`patient not found: ${id}`);
+  }
+
+  return patient;
+};
+
 export default {
   getNonSensitiveEntries,
   addPatient,
+  findPatient,
 };
