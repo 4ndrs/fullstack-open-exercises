@@ -53,3 +53,8 @@ export const setPatientList = (patients: Array<Patient>): Action => ({
   type: "SET_PATIENT_LIST",
   payload: patients,
 });
+
+export const addPatient = (patient: Patient): Action => ({
+  type: "ADD_PATIENT",
+  payload: patient,
+});
