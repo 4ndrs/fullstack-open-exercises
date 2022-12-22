@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { apiBaseUrl } from "../constants";
-import { useStateValue } from "../state";
+import { updatePatient, useStateValue } from "../state";
 import { Patient } from "../types";
 
 const PatientInfoPage = () => {
@@ -25,7 +25,7 @@ const PatientInfoPage = () => {
 
       try {
         const { data: updatedPatient } = await axios.get<Patient>(url);
-        dispatch({ type: "UPDATE_PATIENT", payload: updatedPatient });
+        dispatch(updatePatient(updatedPatient));
       } catch (error: unknown) {
         if (axios.isAxiosError(error) && error.response?.status === 404) {
           console.error(`patient id '${id}' not found`);
