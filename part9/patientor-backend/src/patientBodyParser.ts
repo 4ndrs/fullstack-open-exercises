@@ -1,4 +1,4 @@
-import { Gender, NewPatient } from "./types";
+import { Entry, Gender, NewPatient } from "./types";
 
 export interface BodyFields {
   name: unknown;
@@ -6,6 +6,7 @@ export interface BodyFields {
   ssn: unknown;
   gender: unknown;
   occupation: unknown;
+  entries: unknown;
 }
 
 export const parseRequestBody = ({
@@ -14,6 +15,7 @@ export const parseRequestBody = ({
   ssn,
   gender,
   occupation,
+  entries,
 }: BodyFields): NewPatient => {
   if (!name || !isString(name)) {
     throw new Error(`missing or invalid name field: ${name}`);
@@ -35,7 +37,11 @@ export const parseRequestBody = ({
     throw new Error(`missing or invalid occupation field: ${occupation}`);
   }
 
-  const newPatient = { name, dateOfBirth, ssn, gender, occupation };
+  if (!entries || !isEntries(entries)) {
+    throw new Error(`missing or invalid entries field: ${entries}`);
+  }
+
+  const newPatient = { name, dateOfBirth, ssn, gender, occupation, entries };
 
   return newPatient;
 };
@@ -51,3 +57,18 @@ const isDate = (value: string): boolean => {
 const isGender = (value: string): value is Gender => {
   return Object.values(Gender).includes(value as Gender);
 };
+
+const isEntries = (value: unknown): value is Array<Entry> => {
+  if (!Array.isArray(value)) {
+    return false;
+  }
+
+  if (value.some(isNotEntry)) {
+    return false;
+  }
+
+  return true;
+};
+
+const isNotEntry = (entry: Entry) =>
+  !["Hospital", "OccupatinalHealthCare", "HealthCheck"].includes(entry.type);
