@@ -6,7 +6,7 @@ import { updatePatient, useStateValue } from "../state";
 import { Patient } from "../types";
 
 const PatientInfoPage = () => {
-  const [{ patients }, dispatch] = useStateValue();
+  const [{ patients, diagnoses }, dispatch] = useStateValue();
   const { id } = useParams();
 
   // this should never happen, for now I'll just leave it here
@@ -40,7 +40,7 @@ const PatientInfoPage = () => {
     }
   }, [id]);
 
-  if (!patient?.entries) {
+  if (!patient?.entries || Object.keys(diagnoses).length === 0) {
     return <></>;
   }
 
@@ -57,7 +57,11 @@ const PatientInfoPage = () => {
           </p>
           <ul>
             {entry.diagnosisCodes &&
-              entry.diagnosisCodes.map((code) => <li key={code}>{code}</li>)}
+              entry.diagnosisCodes.map((code) => (
+                <li key={code}>
+                  {code} {diagnoses[code].name}
+                </li>
+              ))}
           </ul>
         </div>
       ))}
