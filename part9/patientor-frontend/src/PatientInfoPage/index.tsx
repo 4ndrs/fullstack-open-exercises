@@ -40,7 +40,7 @@ const PatientInfoPage = () => {
     }
   }, [id]);
 
-  if (!patient) {
+  if (!patient?.entries) {
     return <></>;
   }
 
@@ -49,6 +49,18 @@ const PatientInfoPage = () => {
       <h2>{patient.name}</h2>
       <div>ssn: {patient.ssn}</div>
       <div>occupation: {patient.occupation}</div>
+      <h3>entries</h3>
+      {patient.entries.map((entry) => (
+        <div key={entry.id}>
+          <p>
+            {entry.date} {entry.description}
+          </p>
+          <ul>
+            {entry.diagnosisCodes &&
+              entry.diagnosisCodes.map((code) => <li key={code}>{code}</li>)}
+          </ul>
+        </div>
+      ))}
     </>
   );
 };
