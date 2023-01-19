@@ -90,7 +90,7 @@ const EntryDetails = ({ entry }: { entry: Entry }) => {
 
 const HospitalEntryDetails = ({ entry }: { entry: HospitalEntry }) => (
   <div>
-    <div>{entry.date}</div>
+    <div>{entry.date} | Hospital</div>
     <em>{entry.description}</em>
     <ListDiagnosisCodes codes={entry.diagnosisCodes} />
     <div>diagnose by {entry.specialist}</div>
@@ -99,7 +99,7 @@ const HospitalEntryDetails = ({ entry }: { entry: HospitalEntry }) => (
 
 const HealthCheckEntryDetails = ({ entry }: { entry: HealthCheckEntry }) => (
   <div>
-    <div>{entry.date}</div>
+    <div>{entry.date} | Health check</div>
     <em>{entry.description}</em>
     <ListDiagnosisCodes codes={entry.diagnosisCodes} />
     <div>diagnose by {entry.specialist}</div>
@@ -112,7 +112,9 @@ const OccupationalHealthcareEntryDetails = ({
   entry: OccupationalHealthcareEntry;
 }) => (
   <div>
-    <div>{entry.date}</div>
+    <div>
+      {entry.date} | Occupational Healthcare | {entry.employerName}
+    </div>
     <em>{entry.description}</em>
     <ListDiagnosisCodes codes={entry.diagnosisCodes} />
     <div>diagnose by {entry.specialist}</div>
