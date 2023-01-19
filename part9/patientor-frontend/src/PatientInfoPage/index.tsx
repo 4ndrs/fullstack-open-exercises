@@ -3,10 +3,18 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { apiBaseUrl } from "../constants";
 import { updatePatient, useStateValue } from "../state";
-import { Patient } from "../types";
+
+import type {
+  Diagnosis,
+  Entry,
+  HospitalEntry,
+  HealthCheckEntry,
+  Patient,
+  OccupationalHealthcareEntry,
+} from "../types";
 
 const PatientInfoPage = () => {
-  const [{ patients, diagnoses }, dispatch] = useStateValue();
+  const [{ patients }, dispatch] = useStateValue();
   const { id } = useParams();
 
   // this should never happen, for now I'll just leave it here
@@ -40,7 +48,7 @@ const PatientInfoPage = () => {
     }
   }, [id]);
 
-  if (!patient?.entries || Object.keys(diagnoses).length === 0) {
+  if (!patient?.entries) {
     return <></>;
   }
 
@@ -51,26 +59,92 @@ const PatientInfoPage = () => {
       <div>occupation: {patient.occupation}</div>
       <h3>entries</h3>
       {patient.entries.map((entry) => (
-        <div key={entry.id}>
-          <p>
-            {entry.date} {entry.description}
-          </p>
-          <ul>
-            {entry.diagnosisCodes &&
-              entry.diagnosisCodes.map((code) => (
-                <li key={code}>
-                  {code} {diagnoses[code].name}
-                </li>
-              ))}
-          </ul>
+        <div
+          key={entry.id}
+          style={{
+            border: "1px solid black",
+            padding: 10,
+            marginBottom: 10,
+            borderRadius: 5,
+          }}
+        >
+          <EntryDetails entry={entry} />
         </div>
       ))}
     </>
   );
 };
 
+const EntryDetails = ({ entry }: { entry: Entry }) => {
+  switch (entry.type) {
+    case "Hospital":
+      return <HospitalEntryDetails entry={entry} />;
+    case "HealthCheck":
+      return <HealthCheckEntryDetails entry={entry} />;
+    case "OccupationalHealthcare":
+      return <OccupationalHealthcareEntryDetails entry={entry} />;
+    default:
+      return assertNever(entry);
+  }
+};
+
+const HospitalEntryDetails = ({ entry }: { entry: HospitalEntry }) => (
+  <div>
+    <div>{entry.date}</div>
+    <em>{entry.description}</em>
+    <ListDiagnosisCodes codes={entry.diagnosisCodes} />
+    <div>diagnose by {entry.specialist}</div>
+  </div>
+);
+
+const HealthCheckEntryDetails = ({ entry }: { entry: HealthCheckEntry }) => (
+  <div>
+    <div>{entry.date}</div>
+    <em>{entry.description}</em>
+    <ListDiagnosisCodes codes={entry.diagnosisCodes} />
+    <div>diagnose by {entry.specialist}</div>
+  </div>
+);
+
+const OccupationalHealthcareEntryDetails = ({
+  entry,
+}: {
+  entry: OccupationalHealthcareEntry;
+}) => (
+  <div>
+    <div>{entry.date}</div>
+    <em>{entry.description}</em>
+    <ListDiagnosisCodes codes={entry.diagnosisCodes} />
+    <div>diagnose by {entry.specialist}</div>
+  </div>
+);
+
+type ListDiagnosisCodesProps = { codes?: Array<Diagnosis["code"]> };
+
+const ListDiagnosisCodes = ({ codes }: ListDiagnosisCodesProps) => {
+  const [{ diagnoses }] = useStateValue();
+
+  if (!codes || !diagnoses) {
+    return null;
+  }
+
+  return (
+    <ul>
+      {codes.map((code) => (
+        <li key={code}>
+          {code} {diagnoses[code].name}
+        </li>
+      ))}
+    </ul>
+  );
+};
+
 const isString = (value: unknown): value is string => {
   return typeof value === "string";
+};
+
+const assertNever = (value: never) => {
+  throw new Error(`Whoops, unhandled case ${JSON.stringify(value)}`);
 };
 
 export default PatientInfoPage;
