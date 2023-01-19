@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom";
 import { apiBaseUrl } from "../constants";
 import { updatePatient, useStateValue } from "../state";
 
+import HeartIcon from "@material-ui/icons/Favorite";
+
 import type {
   Diagnosis,
   Entry,
@@ -11,6 +13,7 @@ import type {
   HealthCheckEntry,
   Patient,
   OccupationalHealthcareEntry,
+  HealthCheckRating,
 } from "../types";
 
 const PatientInfoPage = () => {
@@ -102,6 +105,7 @@ const HealthCheckEntryDetails = ({ entry }: { entry: HealthCheckEntry }) => (
     <div>{entry.date} | Health check</div>
     <em>{entry.description}</em>
     <ListDiagnosisCodes codes={entry.diagnosisCodes} />
+    <HealthRating rating={entry.healthCheckRating} />
     <div>diagnose by {entry.specialist}</div>
   </div>
 );
@@ -120,6 +124,30 @@ const OccupationalHealthcareEntryDetails = ({
     <div>diagnose by {entry.specialist}</div>
   </div>
 );
+
+const HealthRating = ({ rating }: { rating: HealthCheckRating }) => {
+  let color: string;
+
+  switch (rating) {
+    case 0:
+      color = "green";
+      break;
+    case 1:
+      color = "yellow";
+      break;
+    case 2:
+      color = "red";
+      break;
+    default:
+      color = "black";
+  }
+
+  return (
+    <div>
+      <HeartIcon style={{ color }} />
+    </div>
+  );
+};
 
 type ListDiagnosisCodesProps = { codes?: Array<Diagnosis["code"]> };
 
