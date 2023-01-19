@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { apiBaseUrl } from "../constants";
 import { updatePatient, useStateValue } from "../state";
+import { HealthCheckRating } from "../types";
 
 import HeartIcon from "@material-ui/icons/Favorite";
 
@@ -13,7 +14,6 @@ import type {
   HealthCheckEntry,
   Patient,
   OccupationalHealthcareEntry,
-  HealthCheckRating,
 } from "../types";
 
 const PatientInfoPage = () => {
@@ -129,13 +129,13 @@ const HealthRating = ({ rating }: { rating: HealthCheckRating }) => {
   let color: string;
 
   switch (rating) {
-    case 0:
+    case HealthCheckRating.Healthy:
       color = "green";
       break;
-    case 1:
+    case HealthCheckRating.LowRisk:
       color = "yellow";
       break;
-    case 2:
+    case HealthCheckRating.HighRisk:
       color = "red";
       break;
     default:
