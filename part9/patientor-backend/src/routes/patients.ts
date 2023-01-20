@@ -1,6 +1,10 @@
 import express from "express";
 import patientService from "../services/patientService";
-import { parseRequestBody, BodyFields } from "../patientBodyParser";
+import {
+  parseRequestBody,
+  BodyFields,
+  parseEntryRequestBody,
+} from "../patientBodyParser";
 
 const router = express.Router();
 
@@ -30,4 +34,19 @@ router.post("/", (request, response) => {
   }
 });
 
+router.post("/:id/entries", (request, response) => {
+  try {
+    const newEntry = parseEntryRequestBody(request.body as unknown);
+
+    response
+      .status(201)
+      .send(patientService.addEntry(request.params.id, newEntry));
+  } catch (error: unknown) {
+    let errorMessage = "something happened";
+    if (error instanceof Error) {
+      errorMessage += ": " + error.message;
+    }
+    response.status(400).send({ error: errorMessage });
+  }
+});
 export default router;
