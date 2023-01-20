@@ -60,9 +60,7 @@ const isGender = (value: string): value is Gender => {
 };
 
 export const parseEntryRequestBody = (requestBody: unknown): Entry => {
-  if (!isEntry(requestBody)) {
-    throw new Error("invalid entry");
-  }
+  assertEntry(requestBody);
 
   const base = {
     id: requestBody.id,
@@ -102,38 +100,40 @@ export const parseEntryRequestBody = (requestBody: unknown): Entry => {
   return entry;
 };
 
-const isEntry = (value: unknown): value is Entry => {
-  // check type prop
-  if (
-    !value ||
-    typeof value !== "object" ||
-    !("type" in value) ||
-    typeof value.type !== "string"
-  ) {
-    return false;
+type AssertEntry = (value: unknown) => asserts value is Entry;
+
+const assertEntry: AssertEntry = (value) => {
+  if (!value || typeof value !== "object") {
+    throw new Error(`invalid entry`);
   }
 
-  // check baseEntry props
-  if (
-    !("id" in value) ||
-    !("description" in value) ||
-    !("date" in value) ||
-    !("specialist" in value) ||
-    typeof value.id !== "string" ||
-    typeof value.description !== "string" ||
-    typeof value.date !== "string" ||
-    typeof value.specialist !== "string"
-  ) {
-    return false;
+  if (!("type" in value) || typeof value.type !== "string") {
+    throw new Error("missing or invalid type property");
+  }
+
+  if (!("id" in value) || typeof value.id !== "string") {
+    throw new Error("missing or invalid id property");
+  }
+
+  if (!("description" in value) || typeof value.description !== "string") {
+    throw new Error("missing or invalid description property");
+  }
+
+  if (!("date" in value) || typeof value.date !== "string") {
+    throw new Error("missing or invalid date property");
+  }
+
+  if (!("specialist" in value) || typeof value.specialist !== "string") {
+    throw new Error("missing or invalid specialist property");
   }
 
   if ("diagnosisCodes" in value) {
     if (!Array.isArray(value.diagnosisCodes)) {
-      return false;
+      throw new Error("invalid diagnosisCodes property");
     }
 
     if (value.diagnosisCodes.some((code) => typeof code !== "string"))
-      return false;
+      throw new Error("invalid diagnosisCodes property");
   }
 
   switch (value.type) {
@@ -147,7 +147,7 @@ const isEntry = (value: unknown): value is Entry => {
         typeof value.discharge.date !== "string" ||
         typeof value.discharge.criteria !== "string"
       ) {
-        return false;
+        throw new Error("Invalid discharge property");
       }
       break;
     case "HealthCheck":
@@ -158,7 +158,7 @@ const isEntry = (value: unknown): value is Entry => {
         typeof value.healthCheckRating !== "number" ||
         !Object.values(HealthCheckRating).includes(value.healthCheckRating)
       ) {
-        return false;
+        throw new Error("Invalid healthCheckRating property");
       }
       break;
     case "OccupationalHealthcare":
@@ -166,7 +166,7 @@ const isEntry = (value: unknown): value is Entry => {
         !("employerName" in value) ||
         typeof value.employerName !== "string"
       ) {
-        return false;
+        throw new Error("invalid employerName property");
       }
 
       if (
@@ -178,11 +178,10 @@ const isEntry = (value: unknown): value is Entry => {
           typeof value.sickLeave.startDate !== "string" ||
           typeof value.sickLeave.endDate !== "string")
       ) {
-        return false;
+        throw new Error("invalid sickLeave property");
       }
       break;
     default:
-      return false;
+      throw new Error("invalid type property");
   }
-  return true;
 };
