@@ -69,3 +69,8 @@ export interface Patient {
 
 export type NonSensitivePatient = Omit<Patient, "ssn" | "entries">;
 export type NewPatient = Omit<Patient, "id" | "entries">;
+export type NewEntry = DistributiveOmit<Entry, "id">;
+
+type DistributiveOmit<T, K extends keyof T> = T extends unknown
+  ? Omit<T, K>
+  : never;
