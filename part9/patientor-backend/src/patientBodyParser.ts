@@ -1,4 +1,6 @@
-import { Entry, Gender, HealthCheckRating, NewPatient } from "./types";
+import { Gender, HealthCheckRating } from "./types";
+
+import type { NewEntry, NewPatient } from "./types";
 
 export interface BodyFields {
   name: unknown;
@@ -59,18 +61,17 @@ const isGender = (value: string): value is Gender => {
   return Object.values(Gender).includes(value as Gender);
 };
 
-export const parseEntryRequestBody = (requestBody: unknown): Entry => {
+export const parseEntryRequestBody = (requestBody: unknown): NewEntry => {
   assertEntry(requestBody);
 
   const base = {
-    id: requestBody.id,
     description: requestBody.description,
     date: requestBody.date,
     specialist: requestBody.specialist,
     diagnosisCodes: requestBody?.diagnosisCodes,
   };
 
-  let entry: Entry;
+  let entry: NewEntry;
 
   switch (requestBody.type) {
     case "Hospital":
@@ -100,7 +101,7 @@ export const parseEntryRequestBody = (requestBody: unknown): Entry => {
   return entry;
 };
 
-type AssertEntry = (value: unknown) => asserts value is Entry;
+type AssertEntry = (value: unknown) => asserts value is NewEntry;
 
 const assertEntry: AssertEntry = (value) => {
   if (!value || typeof value !== "object") {
@@ -109,10 +110,6 @@ const assertEntry: AssertEntry = (value) => {
 
   if (!("type" in value) || typeof value.type !== "string") {
     throw new Error("missing or invalid type property");
-  }
-
-  if (!("id" in value) || typeof value.id !== "string") {
-    throw new Error("missing or invalid id property");
   }
 
   if (!("description" in value) || typeof value.description !== "string") {
