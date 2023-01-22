@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { apiBaseUrl } from "../constants";
 import { updatePatient, useStateValue } from "../state";
 import { HealthCheckRating } from "../types";
+import AddEntryModal from "../AddNewEntry";
 
 import HeartIcon from "@material-ui/icons/Favorite";
 
@@ -74,6 +75,8 @@ const PatientInfoPage = () => {
           <EntryDetails entry={entry} />
         </div>
       ))}
+
+      <AddEntryModal patient={patient} />
     </>
   );
 };
