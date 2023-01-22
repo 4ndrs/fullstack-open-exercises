@@ -154,7 +154,7 @@ type ListDiagnosisCodesProps = { codes?: Array<Diagnosis["code"]> };
 const ListDiagnosisCodes = ({ codes }: ListDiagnosisCodesProps) => {
   const [{ diagnoses }] = useStateValue();
 
-  if (!codes || !diagnoses) {
+  if (!codes || !diagnoses || Object.keys(diagnoses).length === 0) {
     return null;
   }
 
