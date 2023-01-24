@@ -15,9 +15,10 @@ import { useFormik } from "formik";
 import { useState } from "react";
 
 import { updatePatient, useStateValue } from "../state";
+import { HealthCheckRating } from "../types";
 import entryService from "./entryService";
 
-import type { NewEntry, Patient, Errors } from "../types";
+import type { Patient, NewEntry, Errors, FormValues } from "../types";
 
 const AddEntryModal = ({ patient }: { patient: Patient }) => {
   const [open, setOpen] = useState(false);
@@ -26,12 +27,13 @@ const AddEntryModal = ({ patient }: { patient: Patient }) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const initialValues: NewEntry = {
+  const initialValues: FormValues = {
     type: "Hospital",
     date: "",
     specialist: "",
     description: "",
     diagnosisCodes: [],
+    healthCheckRating: HealthCheckRating.Healthy,
     discharge: {
       date: "",
       criteria: "",
@@ -41,8 +43,38 @@ const AddEntryModal = ({ patient }: { patient: Patient }) => {
   const formik = useFormik({
     initialValues,
     onSubmit: async (values, { resetForm }) => {
+      const base = {
+        description: values.description,
+        date: values.date,
+        specialist: values.specialist,
+        diagnosisCodes: values.diagnosisCodes,
+      };
+
+      let newEntry: NewEntry;
+
+      switch (values.type) {
+        case "Hospital":
+          newEntry = {
+            ...base,
+            type: values.type,
+            discharge: values.discharge,
+          };
+          break;
+
+        case "HealthCheck":
+          newEntry = {
+            ...base,
+            type: values.type,
+            healthCheckRating: values.healthCheckRating,
+          };
+          break;
+
+        default:
+          throw new Error("Not implemented");
+      }
+
       try {
-        const addedEntry = await entryService.add(patient.id, values);
+        const addedEntry = await entryService.add(patient.id, newEntry);
 
         const updatedPatient = {
           ...patient,
@@ -99,6 +131,75 @@ const AddEntryModal = ({ patient }: { patient: Patient }) => {
     },
   });
 
+  const getExtraFormComponents = () => {
+    switch (formik.values.type) {
+      case "Hospital":
+        return (
+          <>
+            <TextField
+              fullWidth
+              label="Discharge date"
+              placeholder="YYYY-MM-DD"
+              id="discharge.date"
+              name="discharge.date"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.discharge.date}
+              helperText={
+                formik.touched.discharge?.date && formik.errors.discharge?.date
+              }
+              error={Boolean(
+                formik.touched.discharge?.date && formik.errors.discharge?.date
+              )}
+            />
+
+            <TextField
+              fullWidth
+              label="Discharge criteria"
+              placeholder="Criteria"
+              id="discharge.criteria"
+              name="discharge.criteria"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.discharge.criteria}
+              helperText={
+                formik.touched.discharge?.criteria &&
+                formik.errors.discharge?.criteria
+              }
+              error={Boolean(
+                formik.touched.discharge?.criteria &&
+                  formik.errors.discharge?.criteria
+              )}
+            />
+          </>
+        );
+
+      case "HealthCheck":
+        return (
+          <>
+            <InputLabel id="rating-select-label" style={{ marginTop: 20 }}>
+              Health check rating
+            </InputLabel>
+            <Select
+              fullWidth
+              labelId="rating-select-label"
+              id="healthCheckRating"
+              name="healthCheckRating"
+              value={formik.values.healthCheckRating}
+              onChange={formik.handleChange}
+            >
+              <MenuItem value={HealthCheckRating.Healthy}>Healthy</MenuItem>
+              <MenuItem value={HealthCheckRating.LowRisk}>Low risk</MenuItem>
+              <MenuItem value={HealthCheckRating.HighRisk}>High risk</MenuItem>
+              <MenuItem value={HealthCheckRating.CriticalRisk}>
+                Critical risk
+              </MenuItem>
+            </Select>
+          </>
+        );
+    }
+  };
+
   return (
     <>
       <Button variant="contained" onClick={handleOpen}>
@@ -114,10 +215,12 @@ const AddEntryModal = ({ patient }: { patient: Patient }) => {
               fullWidth
               labelId="type-select-label"
               id="type"
+              name="type"
               value={formik.values.type}
               onChange={formik.handleChange}
             >
               <MenuItem value="Hospital">Hospital</MenuItem>
+              <MenuItem value="HealthCheck">Health check</MenuItem>
             </Select>
 
             <TextField
@@ -184,41 +287,7 @@ const AddEntryModal = ({ patient }: { patient: Patient }) => {
               ))}
             </Select>
 
-            <TextField
-              fullWidth
-              label="Discharge date"
-              placeholder="YYYY-MM-DD"
-              id="discharge.date"
-              name="discharge.date"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.discharge.date}
-              helperText={
-                formik.touched.discharge?.date && formik.errors.discharge?.date
-              }
-              error={Boolean(
-                formik.touched.discharge?.date && formik.errors.discharge?.date
-              )}
-            />
-
-            <TextField
-              fullWidth
-              label="Discharge criteria"
-              placeholder="Criteria"
-              id="discharge.criteria"
-              name="discharge.criteria"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              value={formik.values.discharge.criteria}
-              helperText={
-                formik.touched.discharge?.criteria &&
-                formik.errors.discharge?.criteria
-              }
-              error={Boolean(
-                formik.touched.discharge?.criteria &&
-                  formik.errors.discharge?.criteria
-              )}
-            />
+            {getExtraFormComponents()}
           </DialogContent>
 
           <DialogActions>
