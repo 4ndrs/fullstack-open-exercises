@@ -71,7 +71,8 @@ export type NewEntry = DistributiveOmit<Entry, "id">;
 export type FormValues = Pick<Entry, "type"> &
   Omit<BaseEntry, "id"> &
   Pick<HospitalEntry, "discharge"> &
-  Pick<HealthCheckEntry, "healthCheckRating">;
+  Pick<HealthCheckEntry, "healthCheckRating"> &
+  Pick<OccupationalHealthcareEntry, "employerName"> & { sickLeave: SickLeave };
 
 type DistributiveOmit<T, K extends keyof T> = T extends unknown
   ? Omit<T, K>
@@ -79,5 +80,6 @@ type DistributiveOmit<T, K extends keyof T> = T extends unknown
 
 export interface Errors {
   discharge?: { [id: string]: string };
+  sickLeave?: { [id: string]: string };
   [id: string]: string | { [id: string]: string } | undefined;
 }

@@ -34,6 +34,11 @@ const AddEntryModal = ({ patient }: { patient: Patient }) => {
     description: "",
     diagnosisCodes: [],
     healthCheckRating: HealthCheckRating.Healthy,
+    employerName: "",
+    sickLeave: {
+      startDate: "",
+      endDate: "",
+    },
     discharge: {
       date: "",
       criteria: "",
@@ -69,8 +74,17 @@ const AddEntryModal = ({ patient }: { patient: Patient }) => {
           };
           break;
 
+        case "OccupationalHealthcare":
+          newEntry = {
+            ...base,
+            type: values.type,
+            employerName: values.employerName,
+            sickLeave: values.sickLeave?.endDate ? values.sickLeave : undefined,
+          };
+          break;
+
         default:
-          throw new Error("Not implemented");
+          newEntry = assertNever(values.type);
       }
 
       try {
@@ -125,6 +139,30 @@ const AddEntryModal = ({ patient }: { patient: Patient }) => {
           }
 
           break;
+
+        case "HealthCheck":
+          break;
+
+        case "OccupationalHealthcare":
+          if (!values.employerName) {
+            errors.employerName = required;
+          }
+
+          const anyDateSet =
+            values.sickLeave?.endDate || values.sickLeave?.startDate;
+
+          if (anyDateSet && !values.sickLeave?.startDate.match(dateRegex)) {
+            errors.sickLeave = { ...errors.sickLeave, startDate: dateFormat };
+          }
+
+          if (anyDateSet && !values.sickLeave?.endDate.match(dateRegex)) {
+            errors.sickLeave = { ...errors.sickLeave, endDate: dateFormat };
+          }
+
+          break;
+
+        default:
+          assertNever(values.type);
       }
 
       return errors;
@@ -197,6 +235,69 @@ const AddEntryModal = ({ patient }: { patient: Patient }) => {
             </Select>
           </>
         );
+
+      case "OccupationalHealthcare":
+        return (
+          <>
+            <TextField
+              fullWidth
+              label="Employer name"
+              placeholder="Employer name"
+              id="employerName"
+              name="employerName"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.employerName}
+              helperText={
+                formik.touched.employerName && formik.errors.employerName
+              }
+              error={Boolean(
+                formik.touched.employerName && formik.errors.employerName
+              )}
+            />
+
+            <TextField
+              fullWidth
+              label="Sick leave start date (optional)"
+              placeholder="YYYY-MM-DD"
+              id="sickLeave.startDate"
+              name="sickLeave.startDate"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.sickLeave?.startDate}
+              helperText={
+                formik.touched.sickLeave?.startDate &&
+                formik.errors.sickLeave?.startDate
+              }
+              error={Boolean(
+                formik.touched.sickLeave?.startDate &&
+                  formik.errors.sickLeave?.startDate
+              )}
+            />
+
+            <TextField
+              fullWidth
+              label="Sick leave end date (optional)"
+              placeholder="YYYY-MM-DD"
+              id="sickLeave.endDate"
+              name="sickLeave.endDate"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.sickLeave?.endDate}
+              helperText={
+                formik.touched.sickLeave?.endDate &&
+                formik.errors.sickLeave?.endDate
+              }
+              error={Boolean(
+                formik.touched.sickLeave?.endDate &&
+                  formik.errors.sickLeave?.endDate
+              )}
+            />
+          </>
+        );
+
+      default:
+        assertNever(formik.values.type);
     }
   };
 
@@ -221,6 +322,9 @@ const AddEntryModal = ({ patient }: { patient: Patient }) => {
             >
               <MenuItem value="Hospital">Hospital</MenuItem>
               <MenuItem value="HealthCheck">Health check</MenuItem>
+              <MenuItem value="OccupationalHealthcare">
+                Occupational healthcare
+              </MenuItem>
             </Select>
 
             <TextField
@@ -307,6 +411,10 @@ const AddEntryModal = ({ patient }: { patient: Patient }) => {
       </Dialog>
     </>
   );
+};
+
+const assertNever = (value: never) => {
+  throw new Error(`Unhandled case: ${JSON.stringify(value)}`);
 };
 
 export default AddEntryModal;
