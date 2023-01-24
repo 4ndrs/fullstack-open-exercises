@@ -68,6 +68,11 @@ export type Entry =
 
 export type NewEntry = DistributiveOmit<Entry, "id">;
 
+export type FormValues = Pick<Entry, "type"> &
+  Omit<BaseEntry, "id"> &
+  Pick<HospitalEntry, "discharge"> &
+  Pick<HealthCheckEntry, "healthCheckRating">;
+
 type DistributiveOmit<T, K extends keyof T> = T extends unknown
   ? Omit<T, K>
   : never;
