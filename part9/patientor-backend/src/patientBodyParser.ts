@@ -150,8 +150,6 @@ const assertEntry: AssertEntry = (value) => {
     case "HealthCheck":
       if (
         !("healthCheckRating" in value) ||
-        typeof value.healthCheckRating !== "object" ||
-        !value.healthCheckRating ||
         typeof value.healthCheckRating !== "number" ||
         !Object.values(HealthCheckRating).includes(value.healthCheckRating)
       ) {
