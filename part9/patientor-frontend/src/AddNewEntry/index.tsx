@@ -17,7 +17,7 @@ import { useState } from "react";
 import { updatePatient, useStateValue } from "../state";
 import entryService from "./entryService";
 
-import type { NewEntry, Patient } from "../types";
+import type { NewEntry, Patient, Errors } from "../types";
 
 const AddEntryModal = ({ patient }: { patient: Patient }) => {
   const [open, setOpen] = useState(false);
@@ -58,6 +58,45 @@ const AddEntryModal = ({ patient }: { patient: Patient }) => {
         }
       }
     },
+    validate: (values) => {
+      const errors: Errors = {};
+      const required = "Required";
+      const dateFormat = "Must be in YYYY-MM-DD format";
+
+      const dateRegex =
+        /^\d{4}-([0][1-9]|[1][0-2])-([0][1-9]|[1]\d|[2]\d|[3][0-1])$/;
+
+      if (!values.date) {
+        errors.date = required;
+      } else if (!values.date.match(dateRegex)) {
+        errors.date = dateFormat;
+      }
+
+      if (!values.specialist) {
+        errors.specialist = required;
+      }
+
+      if (!values.description) {
+        errors.description = required;
+      }
+
+      switch (values.type) {
+        case "Hospital":
+          if (!values.discharge.date) {
+            errors.discharge = { ...errors.discharge, date: required };
+          } else if (!values.discharge.date.match(dateRegex)) {
+            errors.discharge = { ...errors.discharge, date: dateFormat };
+          }
+
+          if (!values.discharge.criteria) {
+            errors.discharge = { ...errors.discharge, criteria: required };
+          }
+
+          break;
+      }
+
+      return errors;
+    },
   });
 
   return (
@@ -88,7 +127,10 @@ const AddEntryModal = ({ patient }: { patient: Patient }) => {
               id="date"
               name="date"
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               value={formik.values.date}
+              helperText={formik.touched.date && formik.errors.date}
+              error={Boolean(formik.touched.date && formik.errors.date)}
             />
 
             <TextField
@@ -98,7 +140,12 @@ const AddEntryModal = ({ patient }: { patient: Patient }) => {
               id="specialist"
               name="specialist"
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               value={formik.values.specialist}
+              helperText={formik.touched.specialist && formik.errors.specialist}
+              error={Boolean(
+                formik.touched.specialist && formik.errors.specialist
+              )}
             />
 
             <TextField
@@ -108,7 +155,14 @@ const AddEntryModal = ({ patient }: { patient: Patient }) => {
               id="description"
               name="description"
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               value={formik.values.description}
+              helperText={
+                formik.touched.description && formik.errors.description
+              }
+              error={Boolean(
+                formik.touched.description && formik.errors.description
+              )}
             />
 
             <InputLabel id="diagnosis-codes-label" style={{ marginTop: 20 }}>
@@ -137,7 +191,14 @@ const AddEntryModal = ({ patient }: { patient: Patient }) => {
               id="discharge.date"
               name="discharge.date"
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               value={formik.values.discharge.date}
+              helperText={
+                formik.touched.discharge?.date && formik.errors.discharge?.date
+              }
+              error={Boolean(
+                formik.touched.discharge?.date && formik.errors.discharge?.date
+              )}
             />
 
             <TextField
@@ -147,7 +208,16 @@ const AddEntryModal = ({ patient }: { patient: Patient }) => {
               id="discharge.criteria"
               name="discharge.criteria"
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               value={formik.values.discharge.criteria}
+              helperText={
+                formik.touched.discharge?.criteria &&
+                formik.errors.discharge?.criteria
+              }
+              error={Boolean(
+                formik.touched.discharge?.criteria &&
+                  formik.errors.discharge?.criteria
+              )}
             />
           </DialogContent>
 
