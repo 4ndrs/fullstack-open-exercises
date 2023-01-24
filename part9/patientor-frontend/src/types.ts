@@ -71,3 +71,8 @@ export type NewEntry = DistributiveOmit<Entry, "id">;
 type DistributiveOmit<T, K extends keyof T> = T extends unknown
   ? Omit<T, K>
   : never;
+
+export interface Errors {
+  discharge?: { [id: string]: string };
+  [id: string]: string | { [id: string]: string } | undefined;
+}
